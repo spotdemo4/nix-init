@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize
-        uses: spotdemo4/nix-init/.github/actions/init@main
+        uses: spotdemo4/nix-init@main
         with:
           shell: ci
 
