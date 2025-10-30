@@ -60,3 +60,7 @@ options for [ryanccn/attic-action](https://github.com/ryanccn/attic-action) to u
 ### `cachix_cache`, `cachix_token`, `cachix_key`
 
 options for [cachix/cachix-action](https://github.com/cachix/cachix-action) to use a cachix cache
+
+### `token`
+
+personal access token (PAT) for [actions/checkout](https://github.com/actions/checkout)
