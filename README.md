@@ -23,6 +23,7 @@ it usually runs in < 1 minute, and also works with self-hosted/gitea/forgejo act
   uses: spotdemo4/nix-init@v1.0.0
   with:
     shell: ci
+    attic_endpoint: https://trev.zip/
     attic_cache: nixos
     attic_token: ${{ secrets.ATTIC_TOKEN }}
 ```
