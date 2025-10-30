@@ -1,0 +1,70 @@
+name: "nix init"
+description: "initialize nix"
+
+inputs:
+  shell:
+    description: "development shell environment to use from flake"
+
+  attic_endpoint:
+    description: "URL without the cache name"
+    default: "https://cache.trev.zip/"
+  attic_cache:
+    description: "cache name"
+  attic_token:
+    description: "authorization token"
+
+  cachix_cache:
+    description: "cache name"
+  cachix_token:
+    description: "authorization token"
+  cachix_key:
+    description: "signing key"
+
+runs:
+  using: "composite"
+  steps:
+    - if: ${{ github.server_url == 'https://github.com' }}
+      uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
+      with:
+        egress-policy: audit
+
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+    - if: ${{ github.server_url == 'https://github.com' }}
+      uses: wimpysworld/nothing-but-nix@6af122a9403f936ef689e44cc013ae3f3e2f1c3b # v6
+      continue-on-error: true
+      with:
+        hatchet-protocol: holster
+
+    - uses: DeterminateSystems/nix-installer-action@786fff0690178f1234e4e1fe9b536e94f5433196 # v20
+      with:
+        extra-conf: |
+          accept-flake-config = true
+
+    # caching
+
+    - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
+      uses: ryanccn/attic-action@7fbafba3978e86e585cb68a82c08b30f3672b62d # v0.4.0
+      with:
+        endpoint: ${{ inputs.attic_endpoint }}
+        cache: ${{ inputs.attic_cache }}
+        token: ${{ inputs.attic_token }}
+        inputs-from: .
+
+    - if: ${{ inputs.cachix_cache != '' && inputs.cachix_token != '' }}
+      uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
+      with:
+        name: ${{ inputs.cachix_cache }}
+        authToken: ${{ inputs.cachix_token }}
+        signingKey: ${{ inputs.cachix_key }}
+
+    - if: ${{ inputs.attic_cache == '' && inputs.attic_token == '' && inputs.cachix_cache == '' && inputs.cachix_token == '' }}
+      uses: spotdemo4/nix-simple-cache-action@678b319b2d13680785ab65a0f5618a2e662ac04d # v1.4.8
+
+    # development shell
+
+    - if: ${{ inputs.shell != '' }}
+      uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
+      continue-on-error: true
+      with:
+        arguments: ".#${{ inputs.shell }}"
