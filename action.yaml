@@ -8,6 +8,7 @@ branding:
 inputs:
   token:
     description: "github token for actions/checkout"
+    default: "${{ github.token }}"
 
   shell:
     description: "development shell environment to use from flake"
