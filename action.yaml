@@ -1,5 +1,9 @@
-name: "nix init"
-description: "initialize nix"
+name: nix init
+description: composite action to initialize a nix environment
+author: trev
+branding:
+  icon: anchor
+  color: gray-dark
 
 inputs:
   shell:
