@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Initialize
         uses: spotdemo4/nix-init@main
-        with:
-          shell: ci
 
       - name: Run checks
         run: nix flake check
