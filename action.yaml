@@ -110,7 +110,7 @@ runs:
         signingKey: ${{ inputs.cachix_key }}
 
     - if: ${{ inputs.attic_cache == '' && inputs.attic_token == '' && inputs.cachix_cache == '' && inputs.cachix_token == '' }}
-      uses: spotdemo4/nix-simple-cache-action@678b319b2d13680785ab65a0f5618a2e662ac04d # v1.4.8
+      uses: spotdemo4/nix-simple-cache-action@5726576deda05df659a2ee8834edc807c3a36228 # v1.4.9
 
     # development shell
 
