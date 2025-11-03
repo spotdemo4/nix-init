@@ -105,7 +105,14 @@ runs:
 
         git config --global user.name "${NAME}"
         git config --global user.email "${EMAIL}"
+        git config --global url."https://${{ inputs.token }}@".insteadOf "https://"
         git remote set-url origin "https://${{ inputs.token }}@${DOMAIN}/${{ github.repository }}.git"
+
+    - shell: bash
+      run: |
+        echo "git user: $(git config user.name)"
+        echo "git email: $(git config user.email)"
+        echo "git remote: $(git remote get-url origin)"
 
     # nix
 
