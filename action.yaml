@@ -92,7 +92,10 @@ runs:
       shell: bash
       run: |
         if ! command -v jq >/dev/null 2>&1; then
-          apt install jq -y
+          mkdir -p /tmp/bin
+          curl -sSL -o /tmp/bin/jq https://github.com/jqlang/jq/releases/download/jq-1.8.1/jq-linux-amd64
+          chmod +x /tmp/bin/jq
+          export PATH=$PATH:/tmp/bin
         fi
 
         USER=$(curl -H "Authorization: token ${{ inputs.token }}" "${{ github.server_url }}/api/v1/user" )
