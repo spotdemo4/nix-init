@@ -105,7 +105,7 @@ runs:
 
         git config --global user.name "${NAME}"
         git config --global user.email "${EMAIL}"
-        git config --global url."https://${{ inputs.token }}@".insteadOf "https://"
+        git config --global url."https://${{ inputs.token }}@${DOMAIN}".insteadOf "https://${DOMAIN}"
 
     - shell: bash
       run: |
