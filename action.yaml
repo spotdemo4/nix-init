@@ -91,7 +91,9 @@ runs:
     - if: ${{ env.PLATFORM == 'gitea' && inputs.token != github.token }}
       shell: bash
       run: |
-        sudo apt install jq -y
+        if ! command -v jq >/dev/null 2>&1; then
+          apt install jq -y
+        fi
 
         USER=$(curl -H "Authorization: token ${{ inputs.token }}" "${{ github.server_url }}/api/v1/user" )
         NAME=$(echo "${USER}" | jq -r .login)
