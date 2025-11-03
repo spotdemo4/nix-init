@@ -64,3 +64,7 @@ options for [cachix/cachix-action](https://github.com/cachix/cachix-action) to u
 ### `token`
 
 personal access token (PAT) for [actions/checkout](https://github.com/actions/checkout)
+
+### `app_id`, `private_key`
+
+options for [actions/create-github-app-token](https://github.com/actions/create-github-app-token) to generate a token & set the git username & password
