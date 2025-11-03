@@ -63,6 +63,8 @@ runs:
 
     - if: ${{ steps.app.outputs.token != '' }}
       shell: bash
+      env:
+        GH_TOKEN: ${{ steps.app.outputs.token }}
       run: |
         NAME="${{ steps.app.outputs.app-slug }}[bot]"
         ID=$(gh api "/users/${NAME}" --jq .id)
