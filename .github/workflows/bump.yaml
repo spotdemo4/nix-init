@@ -22,4 +22,4 @@ jobs:
         uses: spotdemo4/bumper@e52d8482bd743a754ce727c61d011870284ecc5d # v0.1.19
         with:
           files: >-
-            README.md
+            .github/README.md
