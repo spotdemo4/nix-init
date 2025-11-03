@@ -18,8 +18,8 @@ inputs:
     description: "number of commits to fetch"
     default: "1"
 
-  shell:
-    description: "development shell environment to use from flake"
+  nix_package_url:
+    description: "The Nix package URL"
 
   attic_endpoint:
     description: "URL without the cache name"
@@ -35,6 +35,9 @@ inputs:
     description: "authorization token"
   cachix_key:
     description: "signing key"
+
+  shell:
+    description: "development shell environment to use from flake"
 
 outputs:
   token:
@@ -124,6 +127,7 @@ runs:
     - uses: DeterminateSystems/nix-installer-action@786fff0690178f1234e4e1fe9b536e94f5433196 # v20
       with:
         github-token: ${{ steps.app.outputs.token || inputs.token }}
+        nix-package-url: ${{ inputs.nix_package_url }}
         extra-conf: |
           accept-flake-config = true
           download-buffer-size = 524288000

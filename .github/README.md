@@ -70,6 +70,10 @@ options for [actions/checkout](https://github.com/actions/checkout)
 
 options for [actions/create-github-app-token](https://github.com/actions/create-github-app-token)
 
+### `nix_package_url`
+
+options for [DeterminateSystems/nix-installer-action](https://github.com/DeterminateSystems/nix-installer-action)
+
 ## outputs
 
 ### `token`
