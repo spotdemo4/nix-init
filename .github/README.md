@@ -62,13 +62,13 @@ options for [ryanccn/attic-action](https://github.com/ryanccn/attic-action) to u
 
 options for [cachix/cachix-action](https://github.com/cachix/cachix-action) to use a cachix cache
 
-### `token`
+### `token`, `fetch_depth`
 
-personal access token (PAT) for [actions/checkout](https://github.com/actions/checkout)
+options for [actions/checkout](https://github.com/actions/checkout)
 
 ### `app_id`, `private_key`
 
-options for [actions/create-github-app-token](https://github.com/actions/create-github-app-token) to generate a token & set the git username & password
+options for [actions/create-github-app-token](https://github.com/actions/create-github-app-token)
 
 ## outputs
 
