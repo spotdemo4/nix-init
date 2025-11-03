@@ -6,6 +6,7 @@
 composite action to initialize nix-based repos. Got tired of writing basically the same few steps for every job so this does all the important stuff in one:
 
 - monitor network activity with harden-runner
+- (optional) create a github app token
 - checkout the repository
 - install nix
 - setup caching
@@ -68,3 +69,9 @@ personal access token (PAT) for [actions/checkout](https://github.com/actions/ch
 ### `app_id`, `private_key`
 
 options for [actions/create-github-app-token](https://github.com/actions/create-github-app-token) to generate a token & set the git username & password
+
+## outputs
+
+### `token`
+
+token created by [actions/create-github-app-token](https://github.com/actions/create-github-app-token)
