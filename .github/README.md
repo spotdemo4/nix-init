@@ -21,7 +21,7 @@ it usually runs in < 1 minute, and also works with self-hosted/gitea/forgejo act
 
 ```yaml
 - name: Initialize
-  uses: spotdemo4/nix-init@v1.0.2
+  uses: spotdemo4/nix-init@v1.0.3
   with:
     shell: ci
     attic_endpoint: https://trev.zip/
@@ -46,7 +46,7 @@ devShells.ci = pkgs.mkShell {
 
 ```yaml
 - name: Initialize
-  uses: spotdemo4/nix-init@v1.0.2
+  uses: spotdemo4/nix-init@v1.0.3
   with:
     shell: ci
 
