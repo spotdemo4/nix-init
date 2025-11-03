@@ -44,16 +44,28 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - shell: bash
+      run: |
+        if [[ -n "${GITEA_ACTION}" ]]; then
+          echo "PLATFORM=gitea" >> $GITHUB_ENV
+        elif [[ -n "${FORGEJO_ACTION}" ]]; then
+          echo "PLATFORM=forgejo" >> $GITHUB_ENV
+        else
+          echo "PLATFORM=github" >> $GITHUB_ENV
+        fi
+
+        echo "platform: ${PLATFORM}"
+
     # security
 
-    - if: ${{ env.GITHUB_ACTION != '' }}
+    - if: ${{ env.PLATFORM == 'github' }}
       uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
       with:
         egress-policy: audit
 
     # checkout
 
-    - if: ${{ env.GITHUB_ACTION != '' && inputs.app_id != '' && inputs.private_key != '' }}
+    - if: ${{ env.PLATFORM == 'github' && inputs.app_id != '' && inputs.private_key != '' }}
       uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
       id: app
       with:
@@ -65,7 +77,7 @@ runs:
         token: ${{ steps.app.outputs.token || inputs.token }}
         fetch-depth: ${{ inputs.fetch_depth }}
 
-    - if: ${{ steps.app.outputs.token != '' }}
+    - if: ${{ env.PLATFORM == 'github' && steps.app.outputs.token != '' }}
       shell: bash
       env:
         GH_TOKEN: ${{ steps.app.outputs.token }}
@@ -78,7 +90,7 @@ runs:
         git config --global user.email "${EMAIL}"
         git remote set-url origin "https://${{ steps.app.outputs.token }}@github.com/${{ github.repository }}.git"
 
-    - if: ${{ env.GITEA_ACTION != '' && inputs.token != github.token }}
+    - if: ${{ env.PLATFORM == 'gitea' && inputs.token != github.token }}
       shell: bash
       run: |
         USER=$(curl -H "Authorization: token ${{ inputs.token }}" "${{ github.server_url }}/api/v1/user" )
@@ -92,7 +104,7 @@ runs:
 
     # nix
 
-    - if: ${{ env.GITHUB_ACTION != '' }}
+    - if: ${{ env.PLATFORM == 'github' }}
       uses: wimpysworld/nothing-but-nix@6af122a9403f936ef689e44cc013ae3f3e2f1c3b # v6
       continue-on-error: true
       with:
