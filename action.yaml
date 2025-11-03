@@ -58,10 +58,6 @@ runs:
         echo "${FORGEJO_ACTIONS}"
         echo "${GITHUB_ACTIONS}"
 
-        echo "${{ gitea.action }}"
-        echo "${{ forgejo.action }}"
-        echo "${{ github.action }}"
-
     # security
 
     - if: ${{ env.PLATFORM == 'github' }}
