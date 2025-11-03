@@ -54,10 +54,6 @@ runs:
           echo "PLATFORM=github" >> $GITHUB_ENV
         fi
 
-        echo "${GITEA_ACTIONS}"
-        echo "${FORGEJO_ACTIONS}"
-        echo "${GITHUB_ACTIONS}"
-
     # security
 
     - if: ${{ env.PLATFORM == 'github' }}
@@ -95,6 +91,8 @@ runs:
     - if: ${{ env.PLATFORM == 'gitea' && inputs.token != github.token }}
       shell: bash
       run: |
+        sudo apt install jq -y
+
         USER=$(curl -H "Authorization: token ${{ inputs.token }}" "${{ github.server_url }}/api/v1/user" )
         NAME=$(echo "${USER}" | jq -r .login)
         EMAIL=$(echo "${USER}" | jq -r .email)
