@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize
-        uses: .
+        uses: ./
 
       - name: Run checks
         run: nix flake check

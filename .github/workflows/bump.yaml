@@ -20,7 +20,7 @@ jobs:
           private-key: ${{ secrets.PRIVATE_KEY }}
 
       - name: Initialize
-        uses: .
+        uses: ./
         with:
           token: ${{ steps.user.outputs.token }}
 
