@@ -17,9 +17,10 @@ jobs:
         with:
           app_id: ${{ vars.CLIENT_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
+          fetch_depth: 0
 
       - name: Bump
-        uses: spotdemo4/bumper@e52d8482bd743a754ce727c61d011870284ecc5d # v0.1.19
+        uses: spotdemo4/bumper@f04a147ddd35d7eb198b7784ad1c2c277c18d23e # v0.1.22
         with:
-          files: >-
+          files: |-
             .github/README.md
