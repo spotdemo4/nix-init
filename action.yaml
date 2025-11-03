@@ -46,15 +46,21 @@ runs:
   steps:
     - shell: bash
       run: |
-        if [[ -n "${GITEA_ACTION}" ]]; then
+        if [[ -n "${GITEA_ACTIONS}" ]]; then
           echo "PLATFORM=gitea" >> $GITHUB_ENV
-        elif [[ -n "${FORGEJO_ACTION}" ]]; then
+        elif [[ -n "${FORGEJO_ACTIONS}" ]]; then
           echo "PLATFORM=forgejo" >> $GITHUB_ENV
-        else
+        elif [[ -n "${GITHUB_ACTIONS}" ]]; then
           echo "PLATFORM=github" >> $GITHUB_ENV
         fi
 
-        echo "platform: ${PLATFORM}"
+        echo "${GITEA_ACTIONS}"
+        echo "${FORGEJO_ACTIONS}"
+        echo "${GITHUB_ACTIONS}"
+
+        echo "${{ gitea.action }}"
+        echo "${{ forgejo.action }}"
+        echo "${{ github.action }}"
 
     # security
 
