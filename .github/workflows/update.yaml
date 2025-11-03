@@ -2,7 +2,7 @@ name: update
 
 on:
   schedule:
-    - cron: "9 9 * * *"
+    - cron: "0 9 * * *" # every day at 09:00 UTC
   workflow_dispatch:
 
 permissions:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize
-        uses: spotdemo4/nix-init@main
+        uses: .
         with:
           shell: ci
 

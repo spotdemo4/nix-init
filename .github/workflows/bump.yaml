@@ -1,0 +1,36 @@
+name: bump
+
+on:
+  schedule:
+    - cron: "0 22 * * 1-5" # every weekday at 22:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create user
+        uses: spotdemo4/setup-git-app-user@c9decd10aa020d716ee1460d4653b48fe9cbe9f7 # v2.0.5
+        id: user
+        with:
+          app-id: ${{ vars.CLIENT_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Initialize
+        uses: .
+        with:
+          token: ${{ steps.user.outputs.token }}
+
+      - name: Set user
+        run: |
+          git config --global user.name "${{ steps.user.outputs.name }}"
+          git config --global user.email "${{ steps.user.outputs.email }}"
+
+      - name: Bump
+        uses: spotdemo4/bumper@cc536d2885e556f388227be368711d34e4c0ca2d # v0.1.18
+        with:
+          files: >-
+            README.md
