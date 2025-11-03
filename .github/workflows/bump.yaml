@@ -30,7 +30,7 @@ jobs:
           git config --global user.email "${{ steps.user.outputs.email }}"
 
       - name: Bump
-        uses: spotdemo4/bumper@cc536d2885e556f388227be368711d34e4c0ca2d # v0.1.18
+        uses: spotdemo4/bumper@e52d8482bd743a754ce727c61d011870284ecc5d # v0.1.19
         with:
           files: >-
             README.md
