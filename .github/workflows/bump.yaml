@@ -29,7 +29,7 @@ jobs:
           fetch_depth: 0
 
       - name: Bump
-        uses: spotdemo4/bumper@ee8c9f8a00e0ace967f439c893da35c4a4e4e517 # v0.2.0
+        uses: spotdemo4/bumper@691017ab4c09b3dab619de406abeabcc560610e3 # v0.2.1
         with:
           force: ${{ inputs.force }}
           files: |-
