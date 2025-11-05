@@ -32,26 +32,29 @@
     utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [nur.overlays.default];
+        overlays = [
+          nur.overlays.packages
+          nur.overlays.libs
+        ];
       };
     in {
       devShells = {
         default = pkgs.mkShell {
           packages = with pkgs; [
-            trev.bumper
+            bumper
           ];
-          shellHook = pkgs.trev.shellhook.ref;
+          shellHook = pkgs.shellhook.ref;
         };
 
         ci = pkgs.mkShell {
           packages = with pkgs; [
             flake-checker
-            trev.renovate
+            renovate
           ];
         };
       };
 
-      checks = pkgs.trev.lib.mkChecks {
+      checks = pkgs.lib.mkChecks {
         nix = {
           src = ./.;
           deps = with pkgs; [
@@ -67,7 +70,7 @@
           deps = with pkgs; [
             prettier
             action-validator
-            trev.renovate
+            renovate
           ];
           script = ''
             prettier --check .
