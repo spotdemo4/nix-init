@@ -16,9 +16,9 @@ jobs:
         id: init
         uses: spotdemo4/nix-init@448722165938617ea8b814719c33d73122390c9a # v1.2.0
         with:
-          shell: ci
           app_id: ${{ vars.CLIENT_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
+          shell: ci
 
       - name: Renovate
         env:
