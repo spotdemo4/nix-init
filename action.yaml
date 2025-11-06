@@ -159,3 +159,9 @@ runs:
       continue-on-error: true
       with:
         arguments: ".#${{ inputs.shell }}"
+
+    # disable ipv6 because github is flaky with it
+
+    - if: ${{ env.PLATFORM == 'github' }}
+      uses: undergroundwires/privacy.sexy/.github/actions/force-ipv4@7ceffaeee77f398676497d2e04fdd77401861061 # v0.13.8
+      continue-on-error: true
