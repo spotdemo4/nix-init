@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize
-        uses: spotdemo4/nix-init@448722165938617ea8b814719c33d73122390c9a # v1.2.0
+        uses: spotdemo4/nix-init@2f8f24dfce1017e0a9fabe0a2cf20b92f73c3075 # v1.2.2
 
       - name: Release
         uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2.4.1
