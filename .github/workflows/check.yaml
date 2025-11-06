@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize
-        uses: spotdemo4/nix-init@2f8f24dfce1017e0a9fabe0a2cf20b92f73c3075 # v1.2.2
+        uses: spotdemo4/nix-init@db355b991de421e07d3c89f9edc18ef8f71394ea # v1.3.0
 
       - name: Run checks
         run: nix flake check
