@@ -152,7 +152,7 @@ runs:
     - uses: actions/cache/restore@v4
       id: cache
       with:
-        path: "${{ runner.temp }}/nix-init-restore/"
+        path: "${{ runner.temp }}/nix-init/"
         key: nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}-${{ inputs.shell || 'default' }}
         restore-keys: |
           nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}-
@@ -161,15 +161,14 @@ runs:
 
     - if: ${{ steps.cache.outputs.cache-matched-key != '' }}
       shell: bash
-      run: |
-        ln -s "${{ runner.temp }}/nix-init-restore/" "${{ runner.temp }}/nix-init/"
+      run: ln "${{ runner.temp }}/nix-init/" "${{ runner.temp }}/nix-init-restore/"
 
     # flake setup (with caching)
 
     - if: ${{ steps.cache.outputs.cache-matched-key != '' }}
       shell: bash
       run: |
-        nix flake archive --store "${{ runner.temp }}/nix-init/" --to daemon
+        nix flake archive --store "${{ runner.temp }}/nix-init-restore/" --to daemon
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       shell: bash
@@ -182,7 +181,7 @@ runs:
       shell: bash
       run: |
         nix copy \
-          --from "${{ runner.temp }}/nix-init/" \
+          --from "${{ runner.temp }}/nix-init-restore/" \
           --no-check-sigs \
           --offline \
           nixpkgs#attic-client || true
@@ -224,7 +223,7 @@ runs:
       run: |
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
         nix copy \
-          --from "${{ runner.temp }}/nix-init/" \
+          --from "${{ runner.temp }}/nix-init-restore/" \
           --no-check-sigs \
           --offline \
           ".#devShells.${SYSTEM}.${{ inputs.shell }}" || true
@@ -248,12 +247,10 @@ runs:
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       shell: bash
-      run: |
-        unlink "${{ runner.temp }}/nix-init" || true
-        ln -s "${{ runner.temp }}/nix-init/" "${{ runner.temp }}/nix-init-save/"
+      run: ln "${{ runner.temp }}/nix-init-save/" "${{ runner.temp }}/nix-init/"
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       uses: actions/cache/save@v4
       with:
-        path: "${{ runner.temp }}/nix-init"
+        path: "${{ runner.temp }}/nix-init/"
         key: ${{ steps.cache.outputs.cache-primary-key }}
