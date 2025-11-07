@@ -250,7 +250,7 @@ runs:
       shell: bash
       run: |
         unlink "${{ runner.temp }}/nix-init" || true
-        ln -s "${{ runner.temp }}/nix-init-save/" "${{ runner.temp }}/nix-init/"
+        ln -s "${{ runner.temp }}/nix-init/" "${{ runner.temp }}/nix-init-save/"
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       uses: actions/cache/save@v4
