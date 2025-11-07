@@ -208,6 +208,7 @@ runs:
         nix copy \
           --from "file://${{ runner.temp }}/nix-init/" \
           --no-check-sigs \
+          --repair \
           ".#devShells.${SYSTEM}.${{ inputs.shell }}" || true
 
     - if: ${{ inputs.shell != '' }}
@@ -223,7 +224,6 @@ runs:
         nix copy \
           --to "file://${{ runner.temp }}/nix-init/?compression=none" \
           --no-check-sigs \
-          --repair \
           ".#devShells.${SYSTEM}.${{ inputs.shell }}"
 
     # save init cache
