@@ -223,16 +223,7 @@ runs:
     # save init cache
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-      shell: bash
-      run: |
-        mkdir -p "${TMPDIR}/nix-init"
-        nix nario export \
-          --format 2 \
-          --recursive \
-          /run/current-system > "${TMPDIR}/nix-init/cache.nario"
-
-    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       uses: actions/cache/save@v4
       with:
         path: /tmp/nix-init
-        key: nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}
+        key: ${{ steps.cache.outputs.cache-primary-key }}
