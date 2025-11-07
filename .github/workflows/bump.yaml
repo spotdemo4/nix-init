@@ -9,7 +9,7 @@ on:
         description: "Force bump"
         required: false
         type: choice
-        default: "false"
+        default: "true"
         options:
           - "true"
           - "false"
