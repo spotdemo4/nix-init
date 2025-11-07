@@ -147,17 +147,26 @@ runs:
           accept-flake-config = true
           download-buffer-size = 524288000
 
-    # action cache
+    # restore action cache
 
     - uses: actions/cache/restore@v4
       id: cache
       with:
-        path: "${{ runner.temp }}/nix-init"
+        path: "${{ runner.temp }}/nix-init-restore/"
         key: nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}-${{ inputs.shell || 'default' }}
+        restore-keys: |
+          nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}-
+          nix-init-${{ hashFiles('**/flake.nix') }}-
+          nix-init-
 
-    # flake
+    - if: ${{ steps.cache.outputs.cache-matched-key != '' }}
+      shell: bash
+      run: |
+        ln -s "${{ runner.temp }}/nix-init-restore/" "${{ runner.temp }}/nix-init/"
 
-    - if: ${{ steps.cache.outputs.cache-hit == 'true' }}
+    # flake setup (with caching)
+
+    - if: ${{ steps.cache.outputs.cache-matched-key != '' }}
       shell: bash
       run: |
         nix flake archive --store "${{ runner.temp }}/nix-init/" --to daemon
@@ -165,11 +174,11 @@ runs:
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       shell: bash
       run: |
-        nix flake archive --to "${{ runner.temp }}/nix-init/"
+        nix flake archive --to "${{ runner.temp }}/nix-init-save/"
 
-    # attic cache
+    # attic setup (with caching)
 
-    - if: ${{ steps.cache.outputs.cache-hit == 'true' && inputs.attic_cache != '' && inputs.attic_token != '' }}
+    - if: ${{ steps.cache.outputs.cache-matched-key != '' && inputs.attic_cache != '' && inputs.attic_token != '' }}
       shell: bash
       run: |
         nix copy \
@@ -190,11 +199,11 @@ runs:
       shell: bash
       run: |
         nix copy \
-          --to "${{ runner.temp }}/nix-init/" \
+          --to "${{ runner.temp }}/nix-init-save/" \
           --no-check-sigs \
           nixpkgs#attic-client
 
-    # cachix cache
+    # cachix setup
 
     - if: ${{ inputs.cachix_cache != '' && inputs.cachix_token != '' }}
       uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
@@ -203,14 +212,14 @@ runs:
         authToken: ${{ inputs.cachix_token }}
         signingKey: ${{ inputs.cachix_key }}
 
-    # default cache
+    # simple cache setup
 
     - if: ${{ inputs.attic_cache == '' && inputs.attic_token == '' && inputs.cachix_cache == '' && inputs.cachix_token == '' }}
       uses: spotdemo4/nix-simple-cache-action@b559f8e40714a57f02221dfe464f780a09df9e0e # v1.5.3
 
-    # development shell
+    # development shell setup (with caching)
 
-    - if: ${{ steps.cache.outputs.cache-hit == 'true' && inputs.shell != '' }}
+    - if: ${{ steps.cache.outputs.cache-matched-key != '' && inputs.shell != '' }}
       shell: bash
       run: |
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
@@ -231,11 +240,17 @@ runs:
       run: |
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
         nix copy \
-          --to "${{ runner.temp }}/nix-init/" \
+          --to "${{ runner.temp }}/nix-init-save/" \
           --no-check-sigs \
           ".#devShells.${SYSTEM}.${{ inputs.shell }}"
 
     # save action cache
+
+    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      shell: bash
+      run: |
+        unlink "${{ runner.temp }}/nix-init" || true
+        ln -s "${{ runner.temp }}/nix-init-save/" "${{ runner.temp }}/nix-init/"
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       uses: actions/cache/save@v4
