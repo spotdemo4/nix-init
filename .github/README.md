@@ -8,6 +8,7 @@ composite action to initialize nix-based repos. Got tired of writing basically t
 - monitor network activity with harden-runner
 - (optional) create a github app token
 - checkout the repository
+- setup git user
 - install nix
 - setup caching
   - [nix-simple-cache-action](https://github.com/spotdemo4/nix-simple-cache-action) (default)
@@ -66,7 +67,7 @@ options for [cachix/cachix-action](https://github.com/cachix/cachix-action) to u
 
 options for [actions/checkout](https://github.com/actions/checkout)
 
-### `app_id`, `private_key`
+### `app_id`, `app_key`
 
 options for [actions/create-github-app-token](https://github.com/actions/create-github-app-token)
 
