@@ -159,16 +159,12 @@ runs:
           nix-init-${{ hashFiles('**/flake.nix') }}-
           nix-init-
 
-    - if: ${{ steps.cache.outputs.cache-matched-key != '' }}
-      shell: bash
-      run: mount --bind "${{ runner.temp }}/nix-init/" "${{ runner.temp }}/nix-init-restore/"
-
     # flake setup (with caching)
 
     - if: ${{ steps.cache.outputs.cache-matched-key != '' }}
       shell: bash
       run: |
-        nix flake archive --store "${{ runner.temp }}/nix-init-restore/" --to daemon
+        nix flake archive --store "${{ runner.temp }}/nix-init/" --to daemon
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       shell: bash
@@ -181,7 +177,7 @@ runs:
       shell: bash
       run: |
         nix copy \
-          --from "${{ runner.temp }}/nix-init-restore/" \
+          --from "${{ runner.temp }}/nix-init/" \
           --no-check-sigs \
           --offline \
           nixpkgs#attic-client || true
@@ -223,7 +219,7 @@ runs:
       run: |
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
         nix copy \
-          --from "${{ runner.temp }}/nix-init-restore/" \
+          --from "${{ runner.temp }}/nix-init/" \
           --no-check-sigs \
           --offline \
           ".#devShells.${SYSTEM}.${{ inputs.shell }}" || true
@@ -247,7 +243,9 @@ runs:
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       shell: bash
-      run: mount --bind "${{ runner.temp }}/nix-init-save/" "${{ runner.temp }}/nix-init/"
+      run: |
+        rm -rf "${{ runner.temp }}/nix-init/"
+        mv "${{ runner.temp }}/nix-init-save/" "${{ runner.temp }}/nix-init/"
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       uses: actions/cache/save@v4
