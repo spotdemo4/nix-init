@@ -223,6 +223,7 @@ runs:
         nix copy \
           --to "file://${{ runner.temp }}/nix-init/?compression=none" \
           --no-check-sigs \
+          --repair \
           ".#devShells.${SYSTEM}.${{ inputs.shell }}"
 
     # save init cache
