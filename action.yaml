@@ -154,16 +154,21 @@ runs:
       id: cache
       with:
         path: /tmp/nix-init
-        key: nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}
+        key: nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}-${{ inputs.shell || 'default' }}
         restore-keys: |
+          nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}-
           nix-init-${{ hashFiles('**/flake.nix') }}-
           nix-init-
 
-    - if: ${{ steps.cache.outputs.cache-hit == 'true' }}
+    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       shell: bash
-      run: nix nario import < /tmp/nix-init/cache.nario || true
+      run: mkdir -p "${TMPDIR}/nix-init"
 
-    # global cache
+    # attic cache
+
+    - if: ${{ steps.cache.outputs.cache-hit == 'true' && inputs.attic_cache != '' && inputs.attic_token != '' }}
+      shell: bash
+      run: nix nario import < "${TMPDIR}/nix-init/attic.nario"
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
       uses: ryanccn/attic-action@7fbafba3978e86e585cb68a82c08b30f3672b62d # v0.4.0
@@ -173,6 +178,16 @@ runs:
         token: ${{ inputs.attic_token }}
         inputs-from: .
 
+    - if: ${{ steps.cache.outputs.cache-hit != 'true' && inputs.attic_cache != '' && inputs.attic_token != '' }}
+      shell: bash
+      run: |
+        nix nario export \
+          --format 2 \
+          --recursive \
+          $(type -p attic) > "${TMPDIR}/nix-init/attic.nario"
+
+    # cachix cache
+
     - if: ${{ inputs.cachix_cache != '' && inputs.cachix_token != '' }}
       uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
       with:
@@ -180,16 +195,30 @@ runs:
         authToken: ${{ inputs.cachix_token }}
         signingKey: ${{ inputs.cachix_key }}
 
+    # default cache
+
     - if: ${{ inputs.attic_cache == '' && inputs.attic_token == '' && inputs.cachix_cache == '' && inputs.cachix_token == '' }}
       uses: spotdemo4/nix-simple-cache-action@8081a7be4147aab699a313ec0e53f937183437a7 # v1.5.2
 
     # development shell
+
+    - if: ${{ steps.cache.outputs.cache-hit == 'true' && inputs.shell != '' }}
+      shell: bash
+      run: nix nario import < "${TMPDIR}/nix-init/shell.nario"
 
     - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
       continue-on-error: true
       with:
         arguments: ".#${{ inputs.shell }}"
+
+    - if: ${{ steps.cache.outputs.cache-hit != 'true' && inputs.shell != '' }}
+      shell: bash
+      run: |
+        nix nario export \
+          --format 2 \
+          --recursive \
+          ".#${{ inputs.shell }}" > "${TMPDIR}/nix-init/shell.nario"
 
     # save init cache
 
