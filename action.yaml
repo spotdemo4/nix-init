@@ -164,23 +164,29 @@ runs:
     - if: ${{ steps.cache.outputs.cache-matched-key != '' }}
       shell: bash
       run: |
-        nix flake archive --store "${{ runner.temp }}/nix-init/" --to daemon
+        echo "getting flake from cache"
+        nix flake archive \
+          --store "${{ runner.temp }}/nix-init/" \
+          --to daemon &> /dev/null
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       shell: bash
       run: |
-        nix flake archive --to "${{ runner.temp }}/nix-init-save/"
+        echo "saving flake to cache"
+        nix flake archive \
+          --to "${{ runner.temp }}/nix-init-save/"
 
     # attic setup (with caching)
 
     - if: ${{ steps.cache.outputs.cache-matched-key != '' && inputs.attic_cache != '' && inputs.attic_token != '' }}
       shell: bash
       run: |
+        echo "getting attic-client from cache"
         nix copy \
           --from "${{ runner.temp }}/nix-init/" \
           --no-check-sigs \
           --offline \
-          nixpkgs#attic-client || true
+          nixpkgs#attic-client &> /dev/null || true
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
       uses: ryanccn/attic-action@7fbafba3978e86e585cb68a82c08b30f3672b62d # v0.4.0
@@ -193,10 +199,11 @@ runs:
     - if: ${{ steps.cache.outputs.cache-hit != 'true' && inputs.attic_cache != '' && inputs.attic_token != '' }}
       shell: bash
       run: |
+        echo "saving attic-client to cache"
         nix copy \
           --to "${{ runner.temp }}/nix-init-save/" \
           --no-check-sigs \
-          nixpkgs#attic-client
+          nixpkgs#attic-client &> /dev/null
 
     # cachix setup
 
@@ -217,12 +224,13 @@ runs:
     - if: ${{ steps.cache.outputs.cache-matched-key != '' && inputs.shell != '' }}
       shell: bash
       run: |
+        echo "getting devShell ${{ inputs.shell }} from cache"
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
         nix copy \
           --from "${{ runner.temp }}/nix-init/" \
           --no-check-sigs \
           --offline \
-          ".#devShells.${SYSTEM}.${{ inputs.shell }}" || true
+          ".#devShells.${SYSTEM}.${{ inputs.shell }}" &> /dev/null || true
 
     - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
@@ -233,11 +241,12 @@ runs:
     - if: ${{ steps.cache.outputs.cache-hit != 'true' && inputs.shell != '' }}
       shell: bash
       run: |
+        echo "saving devShell ${{ inputs.shell }} to cache"
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
         nix copy \
           --to "${{ runner.temp }}/nix-init-save/" \
           --no-check-sigs \
-          ".#devShells.${SYSTEM}.${{ inputs.shell }}"
+          ".#devShells.${SYSTEM}.${{ inputs.shell }}" &> /dev/null
 
     # save action cache
 
