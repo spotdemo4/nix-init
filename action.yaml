@@ -147,17 +147,25 @@ runs:
           accept-flake-config = true
           download-buffer-size = 524288000
 
-    # init cache
+    # action cache
 
     - uses: actions/cache/restore@v4
       id: cache
       with:
         path: "${{ runner.temp }}/nix-init"
         key: nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}-${{ inputs.shell || 'default' }}
-        restore-keys: |
-          nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}-
-          nix-init-${{ hashFiles('**/flake.nix') }}-
-          nix-init-
+
+    # flake
+
+    - if: ${{ steps.cache.outputs.cache-hit == 'true' }}
+      shell: bash
+      run: |
+        nix flake archive --store "${{ runner.temp }}/nix-init/" --to daemon
+
+    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      shell: bash
+      run: |
+        nix flake archive --to "${{ runner.temp }}/nix-init/"
 
     # attic cache
 
@@ -227,7 +235,7 @@ runs:
           --no-check-sigs \
           ".#devShells.${SYSTEM}.${{ inputs.shell }}"
 
-    # save init cache
+    # save action cache
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       uses: actions/cache/save@v4
