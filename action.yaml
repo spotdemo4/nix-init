@@ -161,7 +161,7 @@ runs:
 
     - if: ${{ steps.cache.outputs.cache-matched-key != '' }}
       shell: bash
-      run: ln "${{ runner.temp }}/nix-init/" "${{ runner.temp }}/nix-init-restore/"
+      run: mount --bind "${{ runner.temp }}/nix-init/" "${{ runner.temp }}/nix-init-restore/"
 
     # flake setup (with caching)
 
@@ -247,7 +247,7 @@ runs:
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       shell: bash
-      run: ln "${{ runner.temp }}/nix-init-save/" "${{ runner.temp }}/nix-init/"
+      run: mount --bind "${{ runner.temp }}/nix-init-save/" "${{ runner.temp }}/nix-init/"
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       uses: actions/cache/save@v4
