@@ -153,7 +153,7 @@ runs:
     - uses: actions/cache/restore@v4
       id: cache
       with:
-        path: /tmp/nix-init
+        path: "${{ runner.temp }}/nix-init"
         key: nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}-${{ inputs.shell || 'default' }}
         restore-keys: |
           nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}-
@@ -162,13 +162,13 @@ runs:
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       shell: bash
-      run: mkdir -p "${TMPDIR}/nix-init"
+      run: mkdir -p "${{ runner.temp }}/nix-init"
 
     # attic cache
 
     - if: ${{ steps.cache.outputs.cache-hit == 'true' && inputs.attic_cache != '' && inputs.attic_token != '' }}
       shell: bash
-      run: nix nario import < "${TMPDIR}/nix-init/attic.nario"
+      run: nix nario import < "${{ runner.temp }}/nix-init/attic.nario"
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
       uses: ryanccn/attic-action@7fbafba3978e86e585cb68a82c08b30f3672b62d # v0.4.0
@@ -184,7 +184,7 @@ runs:
         nix nario export \
           --format 2 \
           --recursive \
-          $(type -p attic) > "${TMPDIR}/nix-init/attic.nario"
+          $(type -p attic) > "${{ runner.temp }}/nix-init/attic.nario"
 
     # cachix cache
 
@@ -204,7 +204,7 @@ runs:
 
     - if: ${{ steps.cache.outputs.cache-hit == 'true' && inputs.shell != '' }}
       shell: bash
-      run: nix nario import < "${TMPDIR}/nix-init/shell.nario"
+      run: nix nario import < "${{ runner.temp }}/nix-init/shell.nario"
 
     - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
@@ -218,12 +218,12 @@ runs:
         nix nario export \
           --format 2 \
           --recursive \
-          ".#${{ inputs.shell }}" > "${TMPDIR}/nix-init/shell.nario"
+          ".#${{ inputs.shell }}" > "${{ runner.temp }}/nix-init/shell.nario"
 
     # save init cache
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       uses: actions/cache/save@v4
       with:
-        path: /tmp/nix-init
+        path: "${{ runner.temp }}/nix-init"
         key: ${{ steps.cache.outputs.cache-primary-key }}
