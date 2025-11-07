@@ -149,7 +149,7 @@ runs:
 
     # restore action cache
 
-    - uses: actions/cache/restore@v4
+    - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       id: cache
       with:
         path: "${{ runner.temp }}/nix-init/"
@@ -257,7 +257,7 @@ runs:
         mv "${{ runner.temp }}/nix-init-save/" "${{ runner.temp }}/nix-init/"
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       with:
         path: "${{ runner.temp }}/nix-init/"
         key: ${{ steps.cache.outputs.cache-primary-key }}
