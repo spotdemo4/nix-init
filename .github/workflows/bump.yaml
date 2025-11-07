@@ -33,6 +33,7 @@ jobs:
         with:
           force: ${{ inputs.force }}
           patch_types: |-
+            fix
             chore
           files: |-
             .github/README.md
