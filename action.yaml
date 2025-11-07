@@ -168,7 +168,7 @@ runs:
 
     - if: ${{ steps.cache.outputs.cache-hit == 'true' && inputs.attic_cache != '' && inputs.attic_token != '' }}
       shell: bash
-      run: nix nario import < "${{ runner.temp }}/nix-init/attic.nario" || true
+      run: nix nario import --no-check-sigs < "${{ runner.temp }}/nix-init/attic.nario" || true
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
       uses: ryanccn/attic-action@7fbafba3978e86e585cb68a82c08b30f3672b62d # v0.4.0
@@ -204,7 +204,7 @@ runs:
 
     - if: ${{ steps.cache.outputs.cache-hit == 'true' && inputs.shell != '' }}
       shell: bash
-      run: nix nario import < "${{ runner.temp }}/nix-init/${{ inputs.shell }}.nario" || true
+      run: nix nario import --no-check-sigs < "${{ runner.temp }}/nix-init/${{ inputs.shell }}.nario" || true
 
     - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
@@ -219,6 +219,7 @@ runs:
         nix nario export \
           --format 2 \
           --recursive \
+          --no-check-sigs \
           ".#devShells.${SYSTEM}.${{ inputs.shell }}" > "${{ runner.temp }}/nix-init/${{ inputs.shell }}.nario"
 
     # save init cache
