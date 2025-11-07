@@ -141,13 +141,29 @@ runs:
 
     - uses: DeterminateSystems/nix-installer-action@786fff0690178f1234e4e1fe9b536e94f5433196 # v20
       with:
+        determinate: true
         github-token: ${{ steps.app.outputs.token || inputs.token }}
         nix-package-url: ${{ inputs.nix_package_url }}
         extra-conf: |
           accept-flake-config = true
           download-buffer-size = 524288000
 
-    # caching
+    # init cache
+
+    - uses: actions/cache/restore@v4
+      id: cache
+      with:
+        path: /tmp/nix-init
+        key: nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}
+        restore-keys: |
+          nix-init-${{ hashFiles('**/flake.nix') }}-
+          nix-init-
+
+    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      shell: bash
+      run: nix nario import < /tmp/nix-init/cache.nario || true
+
+    # global cache
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
       uses: ryanccn/attic-action@7fbafba3978e86e585cb68a82c08b30f3672b62d # v0.4.0
@@ -174,3 +190,19 @@ runs:
       continue-on-error: true
       with:
         arguments: ".#${{ inputs.shell }}"
+
+    # save init cache
+
+    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      shell: bash
+      run: |
+        nix nario export \
+          --format 2 \
+          --recursive \
+          /run/current-system > /tmp/nix-init/cache.nario
+
+    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      uses: actions/cache/save@v4
+      with:
+        path: /tmp/nix-init
+        key: nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}
