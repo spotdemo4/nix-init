@@ -184,7 +184,7 @@ runs:
         nix nario export \
           --format 2 \
           --recursive \
-          $(type -p attic) > "${{ runner.temp }}/nix-init/attic.nario"
+          nixpkgs#attic-client > "${{ runner.temp }}/nix-init/attic.nario"
 
     # cachix cache
 
