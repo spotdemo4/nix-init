@@ -159,34 +159,7 @@ runs:
           nix-init-${{ hashFiles('**/flake.nix') }}-
           nix-init-
 
-    # flake setup (with caching)
-
-    - if: ${{ steps.cache.outputs.cache-matched-key != '' }}
-      shell: bash
-      run: |
-        echo "getting flake from cache"
-        nix flake archive \
-          --store "${{ runner.temp }}/nix-init/" \
-          --to daemon &> /dev/null
-
-    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-      shell: bash
-      run: |
-        echo "saving flake to cache"
-        nix flake archive \
-          --to "${{ runner.temp }}/nix-init-save/" &> /dev/null
-
-    # attic setup (with caching)
-
-    - if: ${{ steps.cache.outputs.cache-matched-key != '' && inputs.attic_cache != '' && inputs.attic_token != '' }}
-      shell: bash
-      run: |
-        echo "getting attic-client from cache"
-        nix copy \
-          --from "${{ runner.temp }}/nix-init/" \
-          --no-check-sigs \
-          --offline \
-          nixpkgs#attic-client &> /dev/null || true
+    # attic setup
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
       uses: ryanccn/attic-action@7fbafba3978e86e585cb68a82c08b30f3672b62d # v0.4.0
@@ -195,15 +168,6 @@ runs:
         cache: ${{ inputs.attic_cache }}
         token: ${{ inputs.attic_token }}
         inputs-from: .
-
-    - if: ${{ steps.cache.outputs.cache-hit != 'true' && inputs.attic_cache != '' && inputs.attic_token != '' }}
-      shell: bash
-      run: |
-        echo "saving attic-client to cache"
-        nix copy \
-          --to "${{ runner.temp }}/nix-init-save/" \
-          --no-check-sigs \
-          nixpkgs#attic-client &> /dev/null
 
     # cachix setup
 
@@ -219,45 +183,10 @@ runs:
     - if: ${{ inputs.attic_cache == '' && inputs.attic_token == '' && inputs.cachix_cache == '' && inputs.cachix_token == '' }}
       uses: spotdemo4/nix-simple-cache-action@b559f8e40714a57f02221dfe464f780a09df9e0e # v1.5.3
 
-    # development shell setup (with caching)
-
-    - if: ${{ steps.cache.outputs.cache-matched-key != '' && inputs.shell != '' }}
-      shell: bash
-      run: |
-        echo "getting devShell ${{ inputs.shell }} from cache"
-        SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
-        nix copy \
-          --from "${{ runner.temp }}/nix-init/" \
-          --no-check-sigs \
-          --offline \
-          ".#devShells.${SYSTEM}.${{ inputs.shell }}" &> /dev/null || true
+    # development shell setup
 
     - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
       continue-on-error: true
       with:
         arguments: ".#${{ inputs.shell }}"
-
-    - if: ${{ steps.cache.outputs.cache-hit != 'true' && inputs.shell != '' }}
-      shell: bash
-      run: |
-        echo "saving devShell ${{ inputs.shell }} to cache"
-        SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
-        nix copy \
-          --to "${{ runner.temp }}/nix-init-save/" \
-          --no-check-sigs \
-          ".#devShells.${SYSTEM}.${{ inputs.shell }}" &> /dev/null
-
-    # save action cache
-
-    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-      shell: bash
-      run: |
-        mv "${{ runner.temp }}/nix-init/" "${{ runner.temp }}/nix-init-old/" || true
-        mv "${{ runner.temp }}/nix-init-save/" "${{ runner.temp }}/nix-init/"
-
-    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-      uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
-      with:
-        path: "${{ runner.temp }}/nix-init/"
-        key: ${{ steps.cache.outputs.cache-primary-key }}
