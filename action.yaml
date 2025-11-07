@@ -196,10 +196,11 @@ runs:
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       shell: bash
       run: |
+        mkdir -p "${TMPDIR}/nix-init"
         nix nario export \
           --format 2 \
           --recursive \
-          /run/current-system > /tmp/nix-init/cache.nario
+          /run/current-system > "${TMPDIR}/nix-init/cache.nario"
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       uses: actions/cache/save@v4
