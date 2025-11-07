@@ -6,9 +6,10 @@
 composite action to initialize nix-based repos. Got tired of writing basically the same few steps for every job so this does all the important stuff in one:
 
 - monitor network activity with harden-runner
+- check if the action is a duplicate
 - (optional) create a github app token
 - checkout the repository
-- setup git user
+- setup git user for pushing changes
 - install nix
 - setup caching
   - [nix-simple-cache-action](https://github.com/spotdemo4/nix-simple-cache-action) (default)
@@ -80,3 +81,7 @@ options for [DeterminateSystems/nix-installer-action](https://github.com/Determi
 ### `token`
 
 token created by [actions/create-github-app-token](https://github.com/actions/create-github-app-token)
+
+### `duplicate`
+
+whether the action is a duplicate via [fkirc/skip-duplicate-actions](https://github.com/fkirc/skip-duplicate-actions)

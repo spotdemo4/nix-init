@@ -9,7 +9,6 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
-  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -19,7 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize
+        id: init
         uses: spotdemo4/nix-init@main
 
-      - name: Run checks
+      - if: ${{ steps.init.outputs.duplicate != 'true' }}
+        name: Run checks
         run: nix flake check
