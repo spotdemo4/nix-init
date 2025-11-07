@@ -204,7 +204,7 @@ runs:
 
     - if: ${{ steps.cache.outputs.cache-hit == 'true' && inputs.shell != '' }}
       shell: bash
-      run: nix nario import < "${{ runner.temp }}/nix-init/shell.nario"
+      run: nix nario import < "${{ runner.temp }}/nix-init/${{ inputs.shell }}.nario"
 
     - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
@@ -215,10 +215,11 @@ runs:
     - if: ${{ steps.cache.outputs.cache-hit != 'true' && inputs.shell != '' }}
       shell: bash
       run: |
+        SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
         nix nario export \
           --format 2 \
           --recursive \
-          ".#${{ inputs.shell }}" > "${{ runner.temp }}/nix-init/shell.nario"
+          ".devShells.${SYSTEM}.#${{ inputs.shell }}" > "${{ runner.temp }}/nix-init/${{ inputs.shell }}.nario"
 
     # save init cache
 
