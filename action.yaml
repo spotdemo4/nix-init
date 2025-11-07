@@ -174,7 +174,7 @@ runs:
       run: |
         echo "saving flake to cache"
         nix flake archive \
-          --to "${{ runner.temp }}/nix-init-save/"
+          --to "${{ runner.temp }}/nix-init-save/" &> /dev/null
 
     # attic setup (with caching)
 
