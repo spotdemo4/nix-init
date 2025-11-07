@@ -131,7 +131,7 @@ runs:
         echo "git email: $(git config user.email)"
         echo "git remote: $(git remote get-url origin)"
 
-    # nix
+    # nix setup
 
     - if: ${{ env.PLATFORM == 'github' }}
       uses: wimpysworld/nothing-but-nix@6af122a9403f936ef689e44cc013ae3f3e2f1c3b # v6
@@ -146,18 +146,6 @@ runs:
         extra-conf: |
           accept-flake-config = true
           download-buffer-size = 524288000
-
-    # restore action cache
-
-    - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
-      id: cache
-      with:
-        path: "${{ runner.temp }}/nix-init/"
-        key: nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}-${{ inputs.shell || 'default' }}
-        restore-keys: |
-          nix-init-${{ hashFiles('**/flake.nix') }}-${{ hashFiles('**/flake.lock') }}-
-          nix-init-${{ hashFiles('**/flake.nix') }}-
-          nix-init-
 
     # attic setup
 
