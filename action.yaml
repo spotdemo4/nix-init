@@ -141,7 +141,6 @@ runs:
 
     - uses: DeterminateSystems/nix-installer-action@786fff0690178f1234e4e1fe9b536e94f5433196 # v20
       with:
-        determinate: true
         github-token: ${{ steps.app.outputs.token || inputs.token }}
         nix-package-url: ${{ inputs.nix_package_url }}
         extra-conf: |
@@ -160,15 +159,15 @@ runs:
           nix-init-${{ hashFiles('**/flake.nix') }}-
           nix-init-
 
-    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-      shell: bash
-      run: mkdir -p "${{ runner.temp }}/nix-init"
-
     # attic cache
 
     - if: ${{ steps.cache.outputs.cache-hit == 'true' && inputs.attic_cache != '' && inputs.attic_token != '' }}
       shell: bash
-      run: nix nario import --no-check-sigs < "${{ runner.temp }}/nix-init/attic.nario" || true
+      run: |
+        nix copy \
+          --from "file://${{ runner.temp }}/nix-init/" \
+          --no-check-sigs \
+          nixpkgs#attic-client || true
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
       uses: ryanccn/attic-action@7fbafba3978e86e585cb68a82c08b30f3672b62d # v0.4.0
@@ -181,10 +180,10 @@ runs:
     - if: ${{ steps.cache.outputs.cache-hit != 'true' && inputs.attic_cache != '' && inputs.attic_token != '' }}
       shell: bash
       run: |
-        nix nario export \
-          --format 2 \
-          --recursive \
-          nixpkgs#attic-client > "${{ runner.temp }}/nix-init/attic.nario"
+        nix copy \
+          --to "file://${{ runner.temp }}/nix-init/?compression=none" \
+          --no-check-sigs \
+          nixpkgs#attic-client
 
     # cachix cache
 
@@ -204,7 +203,12 @@ runs:
 
     - if: ${{ steps.cache.outputs.cache-hit == 'true' && inputs.shell != '' }}
       shell: bash
-      run: nix nario import --no-check-sigs < "${{ runner.temp }}/nix-init/${{ inputs.shell }}.nario" || true
+      run: |
+        SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
+        nix copy \
+          --from "file://${{ runner.temp }}/nix-init/" \
+          --no-check-sigs \
+          ".#devShells.${SYSTEM}.${{ inputs.shell }}" || true
 
     - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
@@ -216,10 +220,10 @@ runs:
       shell: bash
       run: |
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
-        nix nario export \
-          --format 2 \
-          --recursive \
-          /run/current-system > "${{ runner.temp }}/nix-init/${{ inputs.shell }}.nario"
+        nix copy \
+          --to "file://${{ runner.temp }}/nix-init/?compression=none" \
+          --no-check-sigs \
+          ".#devShells.${SYSTEM}.${{ inputs.shell }}"
 
     # save init cache
 
