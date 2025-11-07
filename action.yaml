@@ -165,8 +165,9 @@ runs:
       shell: bash
       run: |
         nix copy \
-          --from "file://${{ runner.temp }}/nix-init/" \
+          --from "${{ runner.temp }}/nix-init/" \
           --no-check-sigs \
+          --offline \
           nixpkgs#attic-client || true
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
@@ -181,7 +182,7 @@ runs:
       shell: bash
       run: |
         nix copy \
-          --to "file://${{ runner.temp }}/nix-init/?compression=none" \
+          --to "${{ runner.temp }}/nix-init/" \
           --no-check-sigs \
           nixpkgs#attic-client
 
@@ -206,9 +207,9 @@ runs:
       run: |
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
         nix copy \
-          --from "file://${{ runner.temp }}/nix-init/" \
+          --from "${{ runner.temp }}/nix-init/" \
           --no-check-sigs \
-          --repair \
+          --offline \
           ".#devShells.${SYSTEM}.${{ inputs.shell }}" || true
 
     - if: ${{ inputs.shell != '' }}
@@ -222,7 +223,7 @@ runs:
       run: |
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
         nix copy \
-          --to "file://${{ runner.temp }}/nix-init/?compression=none" \
+          --to "${{ runner.temp }}/nix-init/" \
           --no-check-sigs \
           ".#devShells.${SYSTEM}.${{ inputs.shell }}"
 
