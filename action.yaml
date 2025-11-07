@@ -159,7 +159,7 @@ runs:
           nix-init-${{ hashFiles('**/flake.nix') }}-
           nix-init-
 
-    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+    - if: ${{ steps.cache.outputs.cache-hit == 'true' }}
       shell: bash
       run: nix nario import < /tmp/nix-init/cache.nario || true
 
