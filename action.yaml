@@ -18,9 +18,6 @@ inputs:
     description: "number of commits to fetch"
     default: "1"
 
-  nix_package_url:
-    description: "The Nix package URL"
-
   attic_endpoint:
     description: "URL without the cache name"
     default: "https://cache.trev.zip/"
@@ -139,10 +136,9 @@ runs:
       with:
         hatchet-protocol: holster
 
-    - uses: DeterminateSystems/nix-installer-action@786fff0690178f1234e4e1fe9b536e94f5433196 # v20
+    - uses: DeterminateSystems/determinate-nix-action@0261e3554149588c911e068afc042bdc0627f227 # v3.12.2
       with:
         github-token: ${{ steps.app.outputs.token || inputs.token }}
-        nix-package-url: ${{ inputs.nix_package_url }}
         extra-conf: |
           accept-flake-config = true
           download-buffer-size = 524288000
