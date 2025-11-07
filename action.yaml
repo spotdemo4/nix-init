@@ -206,7 +206,7 @@ runs:
     # default cache
 
     - if: ${{ inputs.attic_cache == '' && inputs.attic_token == '' && inputs.cachix_cache == '' && inputs.cachix_token == '' }}
-      uses: spotdemo4/nix-simple-cache-action@8081a7be4147aab699a313ec0e53f937183437a7 # v1.5.2
+      uses: spotdemo4/nix-simple-cache-action@b559f8e40714a57f02221dfe464f780a09df9e0e # v1.5.3
 
     # development shell
 
