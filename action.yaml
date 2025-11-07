@@ -219,7 +219,7 @@ runs:
         nix nario export \
           --format 2 \
           --recursive \
-          ".devShells.${SYSTEM}.#${{ inputs.shell }}" > "${{ runner.temp }}/nix-init/${{ inputs.shell }}.nario"
+          ".#devShells.${SYSTEM}.${{ inputs.shell }}" > "${{ runner.temp }}/nix-init/${{ inputs.shell }}.nario"
 
     # save init cache
 
