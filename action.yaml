@@ -195,7 +195,7 @@ runs:
       run: nix nario export --format 2 --all > /tmp/cache.nario
 
     - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-    - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       with:
         path: /tmp/cache.nario
         key: nix-init-${{ inputs.shell || 'none' }}-${{ hashFiles('**/flake.lock') }}
