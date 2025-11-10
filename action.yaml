@@ -201,7 +201,7 @@ runs:
       shell: bash
       run: |
         echo "Exporting development shell"
-        nix nario export --format 2 --recursive "${{ steps.devshell.outputs.name }}" > /tmp/devshell.nario
+        nix nario export --format 2 --all > /tmp/devshell.nario
 
     - if: ${{ inputs.shell != '' && steps.devshell-cache.outputs.cache-hit != 'true' }}
       uses: actions/cache/save@v4
