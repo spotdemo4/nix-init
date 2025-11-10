@@ -146,6 +146,22 @@ runs:
           accept-flake-config = true
           download-buffer-size = 524288000
 
+    # restore cache
+
+    - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      id: cache
+      with:
+        path: /tmp/cache.nario
+        key: nix-init-${{ inputs.shell || 'none' }}-${{ hashFiles('**/flake.lock') }}
+
+    - if: ${{ steps.cache.outputs.cache-hit == 'true' }}
+      shell: bash
+      run: nix nario import --no-check-sigs < /tmp/cache.nario
+
+    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      shell: bash
+      run: nix flake archive
+
     # attic setup
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
@@ -168,27 +184,18 @@ runs:
     # development shell setup
 
     - if: ${{ inputs.shell != '' }}
-      uses: actions/cache/restore@v4
-      id: cache
-      with:
-        path: /tmp/shell.nario
-        key: shell-${{ inputs.shell }}-${{ hashFiles('**/flake.lock') }}
-
-    - if: ${{ inputs.shell != '' && steps.cache.outputs.cache-hit == 'true' }}
-      shell: bash
-      run: nix nario import --no-check-sigs < /tmp/shell.nario
-
-    - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
       with:
         arguments: ".#${{ inputs.shell }}"
 
-    - if: ${{ inputs.shell != '' && steps.cache.outputs.cache-hit != 'true' }}
-      shell: bash
-      run: nix nario export --format 2 --all > /tmp/shell.nario
+    # save cache
 
-    - if: ${{ inputs.shell != '' && steps.cache.outputs.cache-hit != 'true' }}
-      uses: actions/cache/save@v4
+    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      shell: bash
+      run: nix nario export --format 2 --all > /tmp/cache.nario
+
+    - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+    - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       with:
-        path: /tmp/shell.nario
-        key: shell-${{ inputs.shell }}-${{ hashFiles('**/flake.lock') }}
+        path: /tmp/cache.nario
+        key: nix-init-${{ inputs.shell || 'none' }}-${{ hashFiles('**/flake.lock') }}
