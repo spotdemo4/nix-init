@@ -167,7 +167,44 @@ runs:
     # development shell setup
 
     - if: ${{ inputs.shell != '' }}
+      shell: bash
+      id: devshell
+      run: |
+        SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
+        NAME=".#devShells.${SYSTEM}.${{ inputs.shell }}"
+        DRV_PATH=$(nix path-info --json "${NAME}" | jq -r 'keys[0]')
+        DRV=${DRV_PATH#/nix/store/}
+
+        echo "name=${NAME}" >> $GITHUB_OUTPUT
+        echo "drv=${DRV}" >> $GITHUB_OUTPUT
+
+    - if: ${{ inputs.shell != '' }}
+      uses: actions/cache/restore@v4
+      id: devshell-cache
+      with:
+        path: /tmp/devshell.nario
+        key: devshell-${{ steps.devshell.outputs.drv }}
+
+    - if: ${{ inputs.shell != '' && steps.devshell-cache.outputs.cache-hit == 'true' }}
+      shell: bash
+      run: |
+        echo "Importing development shell"
+        nix nario import --no-check-sigs < /tmp/devshell.nario
+
+    - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
       continue-on-error: true
       with:
         arguments: ".#${{ inputs.shell }}"
+
+    - if: ${{ inputs.shell != '' && steps.devshell-cache.outputs.cache-hit != 'true' }}
+      shell: bash
+      run: |
+        echo "Exporting development shell"
+        nix nario export --format 2 --recursive "${{ steps.devshell.outputs.name }}" > /tmp/devshell.nario
+
+    - if: ${{ inputs.shell != '' && steps.devshell-cache.outputs.cache-hit != 'true' }}
+      uses: actions/cache/save@v4
+      with:
+        path: /tmp/devshell.nario
+        key: devshell-${{ steps.devshell.outputs.drv }}
