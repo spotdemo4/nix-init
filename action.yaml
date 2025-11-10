@@ -68,9 +68,10 @@ runs:
 
     - if: ${{ env.PLATFORM == 'github' }}
       id: duplicate
-      uses: fkirc/skip-duplicate-actions@f75f66ce1886f00957d99748a42c724f4330bdcf # v5.3.1
+      uses: fkirc/skip-duplicate-actions@04a1aebece824b56e6ad6a401d015479cd1c50b3 # master
       with:
         skip_after_successful_duplicate: "true"
+        skip_summary: "true"
 
     # app token
 
@@ -163,7 +164,7 @@ runs:
         authToken: ${{ inputs.cachix_token }}
         signingKey: ${{ inputs.cachix_key }}
 
-    # simple cache setup
+    # simple-cache setup
 
     - if: ${{ inputs.attic_cache == '' && inputs.attic_token == '' && inputs.cachix_cache == '' && inputs.cachix_token == '' }}
       uses: spotdemo4/nix-simple-cache-action@b559f8e40714a57f02221dfe464f780a09df9e0e # v1.5.3
