@@ -164,11 +164,6 @@ runs:
         authToken: ${{ inputs.cachix_token }}
         signingKey: ${{ inputs.cachix_key }}
 
-    # simple-cache setup
-
-    - if: ${{ inputs.attic_cache == '' && inputs.attic_token == '' && inputs.cachix_cache == '' && inputs.cachix_token == '' }}
-      uses: spotdemo4/nix-simple-cache-action@b559f8e40714a57f02221dfe464f780a09df9e0e # v1.5.3
-
     # development shell setup
 
     - if: ${{ inputs.shell != '' }}

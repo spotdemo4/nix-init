@@ -11,8 +11,7 @@ composite action to initialize nix-based repos. Got tired of writing basically t
 - checkout the repository
 - setup git user for pushing changes
 - install nix
-- setup caching
-  - [nix-simple-cache-action](https://github.com/spotdemo4/nix-simple-cache-action) (default)
+- (optional) setup caching
   - [attic-action](https://github.com/ryanccn/attic-action)
   - [cachix-action](https://github.com/cachix/cachix-action)
 - (optional) use development shell environment from flake
