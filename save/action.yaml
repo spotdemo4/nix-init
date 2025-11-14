@@ -1,0 +1,23 @@
+inputs:
+  name:
+    description: "name of the cache"
+    required: true
+  path:
+    description: "nix path to save to cache"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - if: ${{ inputs.path == '' }}
+      shell: bash
+      run: nix nario export --format 2 --all > "/tmp/${{ inputs.name }}.nario"
+
+    - if: ${{ inputs.path != '' }}
+      shell: bash
+      run: nix nario export --format 2 -r "${{ inputs.path }}" > "/tmp/${{ inputs.name }}.nario"
+
+    - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      with:
+        path: "/tmp/${{ inputs.name }}.nario"
+        key: "nix-init-${{ inputs.name }}-${{ hashFiles('**/flake.lock') }}"
