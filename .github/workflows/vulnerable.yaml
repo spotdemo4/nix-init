@@ -20,7 +20,7 @@ jobs:
       - name: Check flake
         run: flake-checker -f
 
-  action:
+  actions:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize

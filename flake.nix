@@ -80,11 +80,13 @@
             src = ./.;
             deps = with pkgs; [
               prettier
+              octoscan
               action-validator
               renovate
             ];
             script = ''
               prettier --check .
+              octoscan scan .github
               action-validator action.yaml
               action-validator .github/**/*.yaml
               renovate-config-validator .github/renovate.json
