@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Initialize
         id: init
-        uses: .
+        uses: ./
         with:
           shell: ci
 

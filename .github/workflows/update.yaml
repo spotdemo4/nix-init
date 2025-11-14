@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Initialize
         id: init
-        uses: .
+        uses: ./
         with:
           app_id: ${{ vars.CLIENT_ID }}
           app_key: ${{ secrets.PRIVATE_KEY }}
