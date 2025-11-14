@@ -164,12 +164,25 @@ runs:
     # attic setup
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
+      uses: ./restore
+      id: attic-cache
+      with:
+        name: attic
+        path: nixpkgs#attic-client
+
+    - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
       uses: ryanccn/attic-action@7fbafba3978e86e585cb68a82c08b30f3672b62d # v0.4.0
       with:
         endpoint: ${{ inputs.attic_endpoint }}
         cache: ${{ inputs.attic_cache }}
         token: ${{ inputs.attic_token }}
         inputs-from: .
+
+    - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' && steps.attic-cache.outputs.cache-hit != 'true' }}
+      uses: ./save
+      with:
+        name: attic
+        path: nixpkgs#attic-client
 
     # cachix setup
 
@@ -187,6 +200,7 @@ runs:
       id: shell-cache
       with:
         name: "shell-${{ inputs.shell }}"
+        path: ".#devShells.x86_64-linux.${{ inputs.shell }}"
 
     - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
