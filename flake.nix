@@ -55,8 +55,12 @@
 
           ci = pkgs.mkShell {
             packages = with pkgs; [
-              flake-checker
+              # update
               renovate
+
+              # vulnerable
+              flake-checker
+              octoscan
             ];
           };
         };
