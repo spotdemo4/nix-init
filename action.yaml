@@ -182,7 +182,8 @@ runs:
 
     # development shell setup
 
-    - uses: ./restore
+    - if: ${{ inputs.shell != '' }}
+      uses: ./restore
       id: shell-cache
       with:
         name: "shell-${{ inputs.shell }}"
@@ -192,7 +193,7 @@ runs:
       with:
         arguments: ".#${{ inputs.shell }}"
 
-    - if: ${{ steps.shell-cache.outputs.cache-hit != 'true' }}
+    - if: ${{ inputs.shell != '' && steps.shell-cache.outputs.cache-hit != 'true' }}
       uses: ./save
       with:
         name: "shell-${{ inputs.shell }}"
