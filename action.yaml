@@ -199,7 +199,7 @@ runs:
       uses: ./restore
       id: shell-cache
       with:
-        name: "shell-${{ inputs.shell }}"
+        name: shell
         path: ".#devShells.x86_64-linux.${{ inputs.shell }}"
 
     - if: ${{ inputs.shell != '' }}
@@ -210,5 +210,5 @@ runs:
     - if: ${{ inputs.shell != '' && steps.shell-cache.outputs.cache-hit != 'true' }}
       uses: ./save
       with:
-        name: "shell-${{ inputs.shell }}"
+        name: shell
         path: ".#devShells.x86_64-linux.${{ inputs.shell }}"
