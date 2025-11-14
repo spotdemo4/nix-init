@@ -1,4 +1,4 @@
-# nix init action
+# nix-init action
 
 ![check](https://github.com/spotdemo4/nix-init/actions/workflows/check.yaml/badge.svg)
 ![vulnerable](https://github.com/spotdemo4/nix-init/actions/workflows/vulnerable.yaml/badge.svg)
