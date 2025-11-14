@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Initialize
         id: init
-        uses: ./
+        uses: spotdemo4/nix-init@main
         with:
           shell: ci
 
