@@ -21,7 +21,7 @@ runs:
       run: |
         path=$(nix eval --raw "${{ inputs.path }}")
         package=$(basename "$path")
-        hash="${s%%-*}"
+        hash="${package%%-*}"
         echo "hash=${hash}" >> $GITHUB_OUTPUT
 
     - name: Restore cache
