@@ -15,23 +15,20 @@ runs:
   using: "composite"
   steps:
     - if: ${{ inputs.path != '' }}
-      name: Compute nix path hash
-      id: hash
       shell: bash
+      id: hash
       run: |
         path=$(nix eval --raw "${{ inputs.path }}")
         package=$(basename "$path")
         hash="${package%%-*}"
         echo "hash=${hash}" >> $GITHUB_OUTPUT
 
-    - name: Restore cache
-      uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+    - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
       id: cache
       with:
         path: "/tmp/${{ inputs.name }}.nario"
         key: "nix-init-${{ inputs.name }}-${{ steps.hash.outputs.hash || hashFiles('**/flake.lock') }}"
 
     - if: ${{ steps.cache.outputs.cache-hit == 'true' }}
-      name: Import cache
       shell: bash
       run: nix nario import --no-check-sigs < "/tmp/${{ inputs.name }}.nario"

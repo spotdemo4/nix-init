@@ -10,21 +10,18 @@ runs:
   using: "composite"
   steps:
     - if: ${{ inputs.path == '' }}
-      name: Export nix store
       shell: bash
       run: nix nario export --format 2 --all > "/tmp/${{ inputs.name }}.nario"
 
     - if: ${{ inputs.path != '' }}
-      name: Export nix path
       shell: bash
       run: |
         nix build "${{ inputs.path }}"
         nix nario export --format 2 -r "${{ inputs.path }}" > "/tmp/${{ inputs.name }}.nario"
 
     - if: ${{ inputs.path != '' }}
-      name: Compute nix path hash
-      id: hash
       shell: bash
+      id: hash
       run: |
         path=$(nix eval --raw "${{ inputs.path }}")
         package=$(basename "$path")
