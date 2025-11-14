@@ -137,7 +137,7 @@ runs:
       with:
         hatchet-protocol: holster
 
-    - uses: DeterminateSystems/determinate-nix-action@75c10b446a77562b7eb5707d019264ab76a18aa4 # v3.13.0
+    - uses: DeterminateSystems/determinate-nix-action@9596b92e70cbf68a494a2b0273cb5b680184f5fc # v3.13.1
       with:
         github-token: ${{ steps.app.outputs.token || inputs.token }}
         extra-conf: |
