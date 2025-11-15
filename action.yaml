@@ -147,7 +147,7 @@ runs:
 
     # flake archive
 
-    - uses: ./restore
+    - uses: ${{ github.action_path }}/restore
       id: flake-cache
       with:
         name: flake
@@ -164,7 +164,7 @@ runs:
     # attic setup
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
-      uses: ./restore
+      uses: ${{ github.action_path }}/restore
       id: attic-cache
       with:
         name: attic
@@ -179,7 +179,7 @@ runs:
         inputs-from: .
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' && steps.attic-cache.outputs.cache-hit != 'true' }}
-      uses: ./save
+      uses: ${{ github.action_path }}/save
       with:
         name: attic
         path: nixpkgs#attic-client
@@ -196,7 +196,7 @@ runs:
     # development shell setup
 
     - if: ${{ inputs.shell != '' }}
-      uses: ./restore
+      uses: ${{ github.action_path }}/restore
       id: shell-cache
       with:
         name: shell
@@ -208,7 +208,7 @@ runs:
         arguments: ".#${{ inputs.shell }}"
 
     - if: ${{ inputs.shell != '' && steps.shell-cache.outputs.cache-hit != 'true' }}
-      uses: ./save
+      uses: ${{ github.action_path }}/save
       with:
         name: shell
         path: ".#devShells.x86_64-linux.${{ inputs.shell }}"
