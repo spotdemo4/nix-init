@@ -147,7 +147,7 @@ runs:
 
     # flake archive
 
-    - uses: spotdemo4/nix-cache-action/restore@main
+    - uses: spotdemo4/nix-init/restore@main
       id: flake-cache
       with:
         name: flake
@@ -157,14 +157,14 @@ runs:
       run: nix flake archive
 
     - if: ${{ steps.flake-cache.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-cache-action/save@main
+      uses: spotdemo4/nix-init/save@main
       with:
         name: flake
 
     # attic setup
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
-      uses: spotdemo4/nix-cache-action/restore@main
+      uses: spotdemo4/nix-init/restore@main
       id: attic-cache
       with:
         name: attic
@@ -179,7 +179,7 @@ runs:
         inputs-from: .
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' && steps.attic-cache.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-cache-action/save@main
+      uses: spotdemo4/nix-init/save@main
       with:
         name: attic
         path: nixpkgs#attic-client
@@ -196,7 +196,7 @@ runs:
     # development shell setup
 
     - if: ${{ inputs.shell != '' }}
-      uses: spotdemo4/nix-cache-action/restore@main
+      uses: spotdemo4/nix-init/restore@main
       id: shell-cache
       with:
         name: shell
@@ -208,7 +208,7 @@ runs:
         arguments: ".#${{ inputs.shell }}"
 
     - if: ${{ inputs.shell != '' && steps.shell-cache.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-cache-action/save@main
+      uses: spotdemo4/nix-init/save@main
       with:
         name: shell
         path: ".#devShells.x86_64-linux.${{ inputs.shell }}"
