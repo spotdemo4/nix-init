@@ -18,7 +18,7 @@ runs:
       shell: bash
       id: hash
       run: |
-        path=$(nix eval --raw "${{ inputs.path }}")
+        path=$(nix eval --inputs-from . --raw "${{ inputs.path }}")
         package=$(basename "$path")
         hash="${package%%-*}"
         echo "hash=${hash}" >> $GITHUB_OUTPUT

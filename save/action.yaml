@@ -16,14 +16,14 @@ runs:
     - if: ${{ inputs.path != '' }}
       shell: bash
       run: |
-        nix build "${{ inputs.path }}"
-        nix nario export --format 2 -r "${{ inputs.path }}" > "/tmp/${{ inputs.name }}.nario"
+        nix build --inputs-from . "${{ inputs.path }}"
+        nix nario export --format 2 --inputs-from . -r "${{ inputs.path }}" > "/tmp/${{ inputs.name }}.nario"
 
     - if: ${{ inputs.path != '' }}
       shell: bash
       id: hash
       run: |
-        path=$(nix eval --raw "${{ inputs.path }}")
+        path=$(nix eval --inputs-from . --raw "${{ inputs.path }}")
         package=$(basename "$path")
         hash="${package%%-*}"
         echo "hash=${hash}" >> $GITHUB_OUTPUT
