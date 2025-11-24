@@ -25,14 +25,16 @@
     },
     {
       "groupName": "nix inputs",
-      "matchManagers": ["nix"],
-      "matchPackageNames": ["*"]
+      "matchManagers": ["nix"]
     },
     {
       "groupName": "github actions",
+      "matchFileNames": [".github/workflows/*.yaml"],
+      "matchManagers": ["github-actions"]
+    },
+    {
       "commitMessagePrefix": "feat(github actions): ",
-      "matchManagers": ["github-actions"],
-      "matchPackageNames": ["*"]
+      "matchFileNames": ["**/action.yaml"]
     }
   ]
 }
