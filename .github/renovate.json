@@ -33,7 +33,7 @@
       "matchManagers": ["github-actions"]
     },
     {
-      "commitMessagePrefix": "feat(github actions): ",
+      "commitMessagePrefix": "feat: ",
       "matchFileNames": ["**/action.yaml"]
     }
   ]
