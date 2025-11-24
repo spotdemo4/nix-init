@@ -32,8 +32,5 @@ jobs:
         uses: spotdemo4/bumper@32534ba92eb765a5dd0d22d2ee2064748d0a2042 # v0.2.5
         with:
           force: ${{ inputs.force }}
-          patch_types: |-
-            fix
-            chore
           files: |-
             .github/README.md

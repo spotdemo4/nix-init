@@ -30,6 +30,7 @@
     },
     {
       "groupName": "github actions",
+      "commitMessagePrefix": "feat(github actions): ",
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["*"]
     }
