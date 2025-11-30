@@ -43,6 +43,9 @@ outputs:
   duplicate:
     description: "whether the workflow run is a duplicate"
     value: ${{ steps.duplicate.outputs.should_skip || 'false' }}
+  system:
+    description: "the nix system type"
+    value: ${{ steps.system.outputs.system }}
 
 runs:
   using: "composite"
@@ -131,7 +134,7 @@ runs:
 
     # nix setup
 
-    - if: ${{ env.PLATFORM == 'github' }}
+    - if: ${{ env.PLATFORM == 'github' && runner.os == 'Linux' }}
       uses: wimpysworld/nothing-but-nix@6af122a9403f936ef689e44cc013ae3f3e2f1c3b # v6
       continue-on-error: true
       with:
@@ -144,6 +147,12 @@ runs:
           eval-cores = 0
           accept-flake-config = true
           download-buffer-size = 524288000
+
+    - shell: bash
+      id: system
+      run: |
+        SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
+        echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
 
     # flake archive
 
@@ -200,7 +209,7 @@ runs:
       id: shell-cache
       with:
         name: shell
-        path: ".#devShells.x86_64-linux.${{ inputs.shell }}"
+        path: ".#devShells.${{ steps.system.outputs.system }}.${{ inputs.shell }}"
 
     - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
@@ -211,4 +220,4 @@ runs:
       uses: spotdemo4/nix-init/save@main
       with:
         name: shell
-        path: ".#devShells.x86_64-linux.${{ inputs.shell }}"
+        path: ".#devShells.${{ steps.system.outputs.system }}.${{ inputs.shell }}"
