@@ -62,7 +62,7 @@ runs:
 
     # security
 
-    - if: ${{ env.PLATFORM == 'github' }}
+    - if: ${{ env.PLATFORM == 'github' && github.event.repository.private == false }}
       uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
       with:
         egress-policy: audit
@@ -75,6 +75,22 @@ runs:
       with:
         skip_after_successful_duplicate: "true"
         skip_summary: "true"
+
+    # purge disk
+
+    - if: ${{ env.PLATFORM == 'github' && runner.arch == 'ARM64' }}
+      shell: bash
+      run: |
+        echo "Purging disk space on ARM64 runner"
+        df -h /
+        sudo rm -rf /usr/lib/jvm
+        sudo rm -rf /usr/local/.ghcup
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /usr/local/share/powershell
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /usr/share/swift
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+        df -h /
 
     # app token
 
@@ -138,7 +154,7 @@ runs:
       uses: wimpysworld/nothing-but-nix@6af122a9403f936ef689e44cc013ae3f3e2f1c3b # v6
       continue-on-error: true
       with:
-        hatchet-protocol: carve
+        hatchet-protocol: holster
 
     - uses: DeterminateSystems/determinate-nix-action@b3e3f405539b332fcb96794525f35fb10c230baa # v3.13.2
       with:
