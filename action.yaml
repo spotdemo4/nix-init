@@ -138,7 +138,7 @@ runs:
       uses: wimpysworld/nothing-but-nix@6af122a9403f936ef689e44cc013ae3f3e2f1c3b # v6
       continue-on-error: true
       with:
-        hatchet-protocol: holster
+        hatchet-protocol: carve
 
     - uses: DeterminateSystems/determinate-nix-action@b3e3f405539b332fcb96794525f35fb10c230baa # v3.13.2
       with:
