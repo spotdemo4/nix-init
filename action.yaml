@@ -76,22 +76,6 @@ runs:
         skip_after_successful_duplicate: "true"
         skip_summary: "true"
 
-    # purge disk
-
-    - if: ${{ env.PLATFORM == 'github' && runner.arch == 'ARM64' }}
-      shell: bash
-      run: |
-        echo "Purging disk space on ARM64 runner"
-        df -h /
-        sudo rm -rf /usr/lib/jvm
-        sudo rm -rf /usr/local/.ghcup
-        sudo rm -rf /usr/local/lib/android
-        sudo rm -rf /usr/local/share/powershell
-        sudo rm -rf /usr/share/dotnet
-        sudo rm -rf /usr/share/swift
-        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-        df -h /
-
     # app token
 
     - if: ${{ env.PLATFORM == 'github' && inputs.app_id != '' && inputs.app_key != '' }}
@@ -155,6 +139,7 @@ runs:
       continue-on-error: true
       with:
         hatchet-protocol: holster
+        root-safe-haven: 5120
 
     - uses: DeterminateSystems/determinate-nix-action@b3e3f405539b332fcb96794525f35fb10c230baa # v3.13.2
       with:
