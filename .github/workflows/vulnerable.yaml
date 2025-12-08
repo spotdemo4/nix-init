@@ -15,7 +15,7 @@ jobs:
       - name: Initialize
         uses: spotdemo4/nix-init@main
         with:
-          shell: ci
+          shell: vulnerable
 
       - name: Check flake
         run: flake-checker -f
@@ -26,7 +26,7 @@ jobs:
       - name: Initialize
         uses: spotdemo4/nix-init@main
         with:
-          shell: ci
+          shell: vulnerable
 
       - name: Run octoscan
         run: octoscan scan --verbose .github

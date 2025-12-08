@@ -24,8 +24,6 @@ jobs:
       - name: Initialize
         id: init
         uses: spotdemo4/nix-init@main
-        with:
-          shell: ci
 
       - if: ${{ steps.init.outputs.duplicate != 'true' }}
         name: Run checks

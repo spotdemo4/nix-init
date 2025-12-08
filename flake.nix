@@ -1,5 +1,5 @@
 {
-  description = "nix-init action";
+  description = "nix init action";
 
   nixConfig = {
     extra-substituters = [
@@ -13,12 +13,9 @@
   inputs = {
     systems.url = "github:nix-systems/default";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    utils = {
-      url = "github:numtide/flake-utils";
-      inputs.systems.follows = "systems";
-    };
     trev = {
       url = "github:spotdemo4/nur";
+      inputs.systems.follows = "systems";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -26,11 +23,10 @@
   outputs =
     {
       nixpkgs,
-      utils,
       trev,
       ...
     }:
-    utils.lib.eachDefaultSystem (
+    trev.libs.mkFlake (
       system:
       let
         pkgs = import nixpkgs {
@@ -53,13 +49,18 @@
             shellHook = pkgs.shellhook.ref;
           };
 
-          ci = pkgs.mkShell {
+          update = pkgs.mkShell {
             packages = with pkgs; [
-              # update
               renovate
+            ];
+          };
 
-              # vulnerable
+          vulnerable = pkgs.mkShell {
+            packages = with pkgs; [
+              # nix
               flake-checker
+
+              # actions
               octoscan
             ];
           };
@@ -69,10 +70,10 @@
           nix = {
             src = ./.;
             deps = with pkgs; [
-              nixfmt
+              nixfmt-tree
             ];
             script = ''
-              nixfmt -c flake.nix
+              treefmt --ci
             '';
           };
 
@@ -94,7 +95,7 @@
           };
         };
 
-        formatter = pkgs.nixfmt;
+        formatter = pkgs.nixfmt-tree;
       }
     );
 }
