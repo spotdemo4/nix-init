@@ -67,6 +67,16 @@
         };
 
         checks = pkgs.lib.mkChecks {
+          action = {
+            src = ./.;
+            deps = with pkgs; [
+              action-validator
+            ];
+            script = ''
+              action-validator action.yaml
+            '';
+          };
+
           nix = {
             src = ./.;
             deps = with pkgs; [
@@ -86,9 +96,8 @@
               renovate
             ];
             script = ''
-              prettier --check .
+              prettier --check "**/*.json" "**/*.yaml"
               octoscan scan .github
-              action-validator action.yaml
               action-validator .github/**/*.yaml
               renovate-config-validator .github/renovate.json
             '';
