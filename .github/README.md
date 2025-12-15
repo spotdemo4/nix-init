@@ -1,4 +1,4 @@
-# nix-init action
+# nix init action
 
 ![check](https://github.com/spotdemo4/nix-init/actions/workflows/check.yaml/badge.svg)
 ![vulnerable](https://github.com/spotdemo4/nix-init/actions/workflows/vulnerable.yaml/badge.svg)
@@ -18,7 +18,7 @@ composite action to initialize nix-based repos. Got tired of writing basically t
 
 it usually runs in < 1 minute, and also works with self-hosted/gitea/forgejo action runners
 
-## usage
+## Usage
 
 ```yaml
 - name: Initialize
@@ -30,7 +30,7 @@ it usually runs in < 1 minute, and also works with self-hosted/gitea/forgejo act
     attic_token: ${{ secrets.ATTIC_TOKEN }}
 ```
 
-## inputs
+## Inputs
 
 ### `shell`
 
@@ -71,7 +71,7 @@ options for [actions/checkout](https://github.com/actions/checkout)
 
 options for [actions/create-github-app-token](https://github.com/actions/create-github-app-token)
 
-## outputs
+## Outputs
 
 ### `token`
 
