@@ -169,7 +169,7 @@ runs:
     - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
       with:
-        arguments: ".#devShells.${{ steps.system.outputs.system }}.#${{ inputs.shell }}"
+        arguments: ".#devShells.${{ steps.system.outputs.system }}.${{ inputs.shell }}"
 
     - if: ${{ inputs.shell != '' && steps.shell-cache.outputs.cache-hit != 'true' }}
       uses: spotdemo4/nix-nario-action/save@8aa2c8f748fc2f423d157b662824982b7bbffe5a # v0.1.0
