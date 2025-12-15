@@ -1,7 +1,7 @@
 # nix init action
 
-![check](https://github.com/spotdemo4/nix-init/actions/workflows/check.yaml/badge.svg)
-![vulnerable](https://github.com/spotdemo4/nix-init/actions/workflows/vulnerable.yaml/badge.svg)
+![check](https://github.com/spotdemo4/nix-init/actions/workflows/check.yaml/badge.svg?branch=main)
+![vulnerable](https://github.com/spotdemo4/nix-init/actions/workflows/vulnerable.yaml/badge.svg?branch=main)
 
 composite action to initialize nix-based repos. Got tired of writing basically the same few steps for every job so this does all the important stuff in one:
 
