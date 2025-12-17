@@ -110,7 +110,7 @@ runs:
 
     # flake archive
 
-    - uses: spotdemo4/nix-nario-action/restore@8aa2c8f748fc2f423d157b662824982b7bbffe5a # v0.1.0
+    - uses: spotdemo4/nix-nario-action/restore@5020c1b8c0b34b040b7905d6944d1d3eef7785cf # v0.2.0
       id: flake-cache
       with:
         name: flake
@@ -120,14 +120,14 @@ runs:
       run: nix flake archive
 
     - if: ${{ steps.flake-cache.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@8aa2c8f748fc2f423d157b662824982b7bbffe5a # v0.1.0
+      uses: spotdemo4/nix-nario-action/save@5020c1b8c0b34b040b7905d6944d1d3eef7785cf # v0.2.0
       with:
         name: flake
 
     # attic setup
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
-      uses: spotdemo4/nix-nario-action/restore@8aa2c8f748fc2f423d157b662824982b7bbffe5a # v0.1.0
+      uses: spotdemo4/nix-nario-action/restore@5020c1b8c0b34b040b7905d6944d1d3eef7785cf # v0.2.0
       id: attic-cache
       with:
         name: attic
@@ -143,7 +143,7 @@ runs:
         inputs-from: .
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' && steps.attic-cache.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@8aa2c8f748fc2f423d157b662824982b7bbffe5a # v0.1.0
+      uses: spotdemo4/nix-nario-action/save@5020c1b8c0b34b040b7905d6944d1d3eef7785cf # v0.2.0
       with:
         name: attic
         path: nixpkgs#attic-client
@@ -160,7 +160,7 @@ runs:
     # development shell setup
 
     - if: ${{ inputs.shell != '' }}
-      uses: spotdemo4/nix-nario-action/restore@8aa2c8f748fc2f423d157b662824982b7bbffe5a # v0.1.0
+      uses: spotdemo4/nix-nario-action/restore@5020c1b8c0b34b040b7905d6944d1d3eef7785cf # v0.2.0
       id: shell-cache
       with:
         name: shell
@@ -172,7 +172,7 @@ runs:
         arguments: ".#devShells.${{ steps.system.outputs.system }}.${{ inputs.shell }}"
 
     - if: ${{ inputs.shell != '' && steps.shell-cache.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@8aa2c8f748fc2f423d157b662824982b7bbffe5a # v0.1.0
+      uses: spotdemo4/nix-nario-action/save@5020c1b8c0b34b040b7905d6944d1d3eef7785cf # v0.2.0
       with:
         name: shell
         path: ".#devShells.${{ steps.system.outputs.system }}.${{ inputs.shell }}"
