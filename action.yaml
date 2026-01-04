@@ -95,6 +95,17 @@ runs:
         hatchet-protocol: holster
 
     - uses: DeterminateSystems/determinate-nix-action@1d699fc25db3f9e079cd2f168ca007a4183389be # v3.15.1
+      id: nix-setup
+      continue-on-error: true
+      with:
+        github-token: ${{ steps.checkout.outputs.token || inputs.token }}
+        extra-conf: |
+          eval-cores = 0
+          accept-flake-config = true
+          download-buffer-size = 524288000
+
+    - if: ${{ steps.nix-setup.outcome == 'failure' }}
+      uses: DeterminateSystems/determinate-nix-action@1d699fc25db3f9e079cd2f168ca007a4183389be # v3.15.1
       with:
         github-token: ${{ steps.checkout.outputs.token || inputs.token }}
         extra-conf: |
