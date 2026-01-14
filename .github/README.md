@@ -1,7 +1,7 @@
 # nix init action
 
-![check](https://github.com/spotdemo4/nix-init/actions/workflows/check.yaml/badge.svg?branch=main)
-![vulnerable](https://github.com/spotdemo4/nix-init/actions/workflows/vulnerable.yaml/badge.svg?branch=main)
+[![check](https://github.com/spotdemo4/nix-init/actions/workflows/check.yaml/badge.svg?branch=main)](https://github.com/spotdemo4/nix-init/actions/workflows/check.yaml)
+[![vulnerable](https://github.com/spotdemo4/nix-init/actions/workflows/vulnerable.yaml/badge.svg?branch=main)](https://github.com/spotdemo4/nix-init/actions/workflows/vulnerable.yaml)
 
 composite action to initialize nix-based repos. Got tired of writing basically the same few steps for every job so this does all the important stuff in one:
 
@@ -77,6 +77,14 @@ options for [actions/create-github-app-token](https://github.com/actions/create-
 
 token created by [actions/create-github-app-token](https://github.com/actions/create-github-app-token)
 
+### `user`
+
+the username from the token, used for git operations
+
 ### `duplicate`
 
 whether the action is a duplicate via [fkirc/skip-duplicate-actions](https://github.com/fkirc/skip-duplicate-actions)
+
+### `system`
+
+the nix system platform (eg. `x86_64-linux`)

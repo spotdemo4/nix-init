@@ -21,8 +21,8 @@ jobs:
         os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Initialize
-        id: init
+      - id: init
+        name: Initialize
         uses: spotdemo4/nix-init@main
 
       - if: ${{ steps.init.outputs.duplicate != 'true' }}
