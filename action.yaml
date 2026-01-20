@@ -125,7 +125,7 @@ runs:
     # flake archive
 
     - id: flake-cache
-      uses: spotdemo4/nix-nario-action/restore@5020c1b8c0b34b040b7905d6944d1d3eef7785cf # v0.2.0
+      uses: spotdemo4/nix-nario-action/restore@aa707625cb3a65503a99e68466dc5bf33006825a # v0.3.0
       with:
         name: flake
 
@@ -134,7 +134,7 @@ runs:
       run: nix flake archive
 
     - if: ${{ steps.flake-cache.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@5020c1b8c0b34b040b7905d6944d1d3eef7785cf # v0.2.0
+      uses: spotdemo4/nix-nario-action/save@aa707625cb3a65503a99e68466dc5bf33006825a # v0.3.0
       with:
         name: flake
 
@@ -142,7 +142,7 @@ runs:
 
     - id: attic-cache
       if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
-      uses: spotdemo4/nix-nario-action/restore@5020c1b8c0b34b040b7905d6944d1d3eef7785cf # v0.2.0
+      uses: spotdemo4/nix-nario-action/restore@aa707625cb3a65503a99e68466dc5bf33006825a # v0.3.0
       with:
         name: attic
         path: nixpkgs#attic-client
@@ -157,7 +157,7 @@ runs:
         inputs-from: .
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' && steps.attic-cache.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@5020c1b8c0b34b040b7905d6944d1d3eef7785cf # v0.2.0
+      uses: spotdemo4/nix-nario-action/save@aa707625cb3a65503a99e68466dc5bf33006825a # v0.3.0
       with:
         name: attic
         path: nixpkgs#attic-client
@@ -175,7 +175,7 @@ runs:
 
     - id: shell-cache
       if: ${{ inputs.shell != '' }}
-      uses: spotdemo4/nix-nario-action/restore@5020c1b8c0b34b040b7905d6944d1d3eef7785cf # v0.2.0
+      uses: spotdemo4/nix-nario-action/restore@aa707625cb3a65503a99e68466dc5bf33006825a # v0.3.0
       with:
         name: shell
         path: ".#devShells.${{ steps.system.outputs.system }}.${{ inputs.shell }}"
@@ -186,7 +186,7 @@ runs:
         arguments: ".#devShells.${{ steps.system.outputs.system }}.${{ inputs.shell }}"
 
     - if: ${{ inputs.shell != '' && steps.shell-cache.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@5020c1b8c0b34b040b7905d6944d1d3eef7785cf # v0.2.0
+      uses: spotdemo4/nix-nario-action/save@aa707625cb3a65503a99e68466dc5bf33006825a # v0.3.0
       with:
         name: shell
         path: ".#devShells.${{ steps.system.outputs.system }}.${{ inputs.shell }}"
