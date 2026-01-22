@@ -6,7 +6,6 @@
 composite action to initialize nix-based repos. Got tired of writing basically the same few steps for every job so this does all the important stuff in one:
 
 - monitor network activity with harden-runner
-- check if the action is a duplicate
 - (optional) create a github app token
 - checkout the repository
 - setup git user for pushing changes
