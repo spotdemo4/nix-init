@@ -26,13 +26,6 @@ inputs:
   attic_token:
     description: "authorization token"
 
-  cachix_cache:
-    description: "cache name"
-  cachix_token:
-    description: "authorization token"
-  cachix_key:
-    description: "signing key"
-
   shell:
     description: "development shell to use from flake"
 
@@ -43,9 +36,6 @@ outputs:
   user:
     description: "the username used to checkout"
     value: ${{ steps.checkout.outputs.name }}
-  duplicate:
-    description: "whether the workflow run is a duplicate"
-    value: ${{ steps.duplicate.outputs.should_skip || 'false' }}
   system:
     description: "the nix system type"
     value: ${{ steps.system.outputs.system }}
@@ -70,15 +60,6 @@ runs:
       with:
         egress-policy: audit
 
-    # duplicate
-
-    - if: ${{ env.PLATFORM == 'github' }}
-      id: duplicate
-      uses: fkirc/skip-duplicate-actions@04a1aebece824b56e6ad6a401d015479cd1c50b3 # master
-      with:
-        skip_after_successful_duplicate: "true"
-        skip_summary: "true"
-
     # checkout
 
     - id: checkout
@@ -91,23 +72,20 @@ runs:
 
     # nix setup
 
-    - if: ${{ env.PLATFORM == 'github' && runner.os == 'Linux' && runner.arch == 'X64' }}
+    - shell: bash
+      run: |
+        if which nix; then
+          echo "NIX_INSTALLED=true" >> $GITHUB_ENV
+        fi
+
+    - if: ${{ env.PLATFORM == 'github' && runner.os == 'Linux' && runner.arch == 'X64' && runner.environment == 'github-hosted' }}
       uses: wimpysworld/nothing-but-nix@6af122a9403f936ef689e44cc013ae3f3e2f1c3b # v6
       continue-on-error: true
       with:
         hatchet-protocol: holster
 
-    - id: nix-setup
-      uses: DeterminateSystems/determinate-nix-action@89ab342bd48ff7318caf8d39d6a330c7b1df8f2f # v3.15.2
-      continue-on-error: true
-      with:
-        github-token: ${{ steps.checkout.outputs.token || inputs.token }}
-        extra-conf: |
-          eval-cores = 0
-          accept-flake-config = true
-          download-buffer-size = 524288000
-
-    - if: ${{ steps.nix-setup.outcome == 'failure' }}
+    - if: ${{ env.NIX_INSTALLED != 'true' }}
+      id: nix-setup
       uses: DeterminateSystems/determinate-nix-action@89ab342bd48ff7318caf8d39d6a330c7b1df8f2f # v3.15.2
       with:
         github-token: ${{ steps.checkout.outputs.token || inputs.token }}
@@ -124,16 +102,17 @@ runs:
 
     # flake archive
 
-    - id: flake-cache
+    - if: ${{ env.NIX_INSTALLED != 'true' }}
+      id: flake-cache
       uses: spotdemo4/nix-nario-action/restore@aa707625cb3a65503a99e68466dc5bf33006825a # v0.3.0
       with:
         name: flake
 
-    - if: ${{ steps.flake-cache.outputs.cache-hit != 'true' }}
+    - if: ${{ env.NIX_INSTALLED != 'true' && steps.flake-cache.outputs.cache-hit != 'true' }}
       shell: bash
       run: nix flake archive
 
-    - if: ${{ steps.flake-cache.outputs.cache-hit != 'true' }}
+    - if: ${{ env.NIX_INSTALLED != 'true' && steps.flake-cache.outputs.cache-hit != 'true' }}
       uses: spotdemo4/nix-nario-action/save@aa707625cb3a65503a99e68466dc5bf33006825a # v0.3.0
       with:
         name: flake
@@ -141,7 +120,7 @@ runs:
     # attic setup
 
     - id: attic-cache
-      if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
+      if: ${{ env.NIX_INSTALLED != 'true' && inputs.attic_cache != '' && inputs.attic_token != '' }}
       uses: spotdemo4/nix-nario-action/restore@aa707625cb3a65503a99e68466dc5bf33006825a # v0.3.0
       with:
         name: attic
@@ -156,25 +135,16 @@ runs:
         token: ${{ inputs.attic_token }}
         inputs-from: .
 
-    - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' && steps.attic-cache.outputs.cache-hit != 'true' }}
+    - if: ${{ env.NIX_INSTALLED != 'true' && inputs.attic_cache != '' && inputs.attic_token != '' && steps.attic-cache.outputs.cache-hit != 'true' }}
       uses: spotdemo4/nix-nario-action/save@aa707625cb3a65503a99e68466dc5bf33006825a # v0.3.0
       with:
         name: attic
         path: nixpkgs#attic-client
 
-    # cachix setup
-
-    - if: ${{ inputs.cachix_cache != '' && inputs.cachix_token != '' }}
-      uses: cachix/cachix-action@0fc020193b5a1fa3ac4575aa3a7d3aa6a35435ad # v16
-      with:
-        name: ${{ inputs.cachix_cache }}
-        authToken: ${{ inputs.cachix_token }}
-        signingKey: ${{ inputs.cachix_key }}
-
     # development shell setup
 
     - id: shell-cache
-      if: ${{ inputs.shell != '' }}
+      if: ${{ env.NIX_INSTALLED != 'true' && inputs.shell != '' }}
       uses: spotdemo4/nix-nario-action/restore@aa707625cb3a65503a99e68466dc5bf33006825a # v0.3.0
       with:
         name: shell
@@ -185,7 +155,7 @@ runs:
       with:
         arguments: ".#devShells.${{ steps.system.outputs.system }}.${{ inputs.shell }}"
 
-    - if: ${{ inputs.shell != '' && steps.shell-cache.outputs.cache-hit != 'true' }}
+    - if: ${{ env.NIX_INSTALLED != 'true' && inputs.shell != '' && steps.shell-cache.outputs.cache-hit != 'true' }}
       uses: spotdemo4/nix-nario-action/save@aa707625cb3a65503a99e68466dc5bf33006825a # v0.3.0
       with:
         name: shell
