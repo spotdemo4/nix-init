@@ -59,10 +59,6 @@ devShells.ci = pkgs.mkShell {
 
 options for [ryanccn/attic-action](https://github.com/ryanccn/attic-action) to use an attic cache
 
-### `cachix_cache`, `cachix_token`, `cachix_key`
-
-options for [cachix/cachix-action](https://github.com/cachix/cachix-action) to use a cachix cache
-
 ### `token`, `fetch_depth`
 
 options for [actions/checkout](https://github.com/actions/checkout)
@@ -80,10 +76,6 @@ token created by [actions/create-github-app-token](https://github.com/actions/cr
 ### `user`
 
 the username from the token, used for git operations
-
-### `duplicate`
-
-whether the action is a duplicate via [fkirc/skip-duplicate-actions](https://github.com/fkirc/skip-duplicate-actions)
 
 ### `system`
 
