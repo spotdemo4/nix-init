@@ -25,6 +25,5 @@ jobs:
         name: Initialize
         uses: spotdemo4/nix-init@main
 
-      - if: ${{ steps.init.outputs.duplicate != 'true' }}
-        name: Run checks
+      - name: Run checks
         run: nix flake check
