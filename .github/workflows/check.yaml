@@ -25,5 +25,17 @@ jobs:
         name: Initialize
         uses: spotdemo4/nix-init@main
 
+      - id: cache
+        name: Restore actions cache
+        uses: spotdemo4/nix-nario-action/restore@f270249a617dd082f1605aed880425b1ba02c955 # v0.5.0
+        with:
+          path: ".#checks.${{ steps.init.outputs.system }}.actions"
+
       - name: Run checks
         run: nix flake check
+
+      - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+        name: Save actions cache
+        uses: spotdemo4/nix-nario-action/save@f270249a617dd082f1605aed880425b1ba02c955 # v0.5.0
+        with:
+          path: ".#checks.${{ steps.init.outputs.system }}.actions"
