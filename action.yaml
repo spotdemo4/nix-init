@@ -79,7 +79,7 @@ runs:
         fi
 
     - if: ${{ env.PLATFORM == 'github' && runner.os == 'Linux' && runner.arch == 'X64' && runner.environment == 'github-hosted' }}
-      uses: wimpysworld/nothing-but-nix@6af122a9403f936ef689e44cc013ae3f3e2f1c3b # v6
+      uses: wimpysworld/nothing-but-nix@dd6ef566962bfa4656301706035da97ebbe90e9b # v9
       continue-on-error: true
       with:
         hatchet-protocol: holster
