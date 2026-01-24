@@ -5,15 +5,12 @@
 
 composite action to initialize nix-based repos. Got tired of writing basically the same few steps for every job so this does all the important stuff in one:
 
-- monitor network activity with harden-runner
-- (optional) create a github app token
+- create a github app token (optional)
 - checkout the repository
 - setup git user for pushing changes
 - install nix
-- (optional) setup caching
-  - [attic-action](https://github.com/ryanccn/attic-action)
-  - [cachix-action](https://github.com/cachix/cachix-action)
-- (optional) use development shell environment from flake
+- setup caching via [attic-action](https://github.com/ryanccn/attic-action) (optional)
+- use development shell environment from flake (optional)
 
 it usually runs in < 1 minute, and also works with self-hosted/gitea/forgejo action runners
 
@@ -58,7 +55,7 @@ devShells.ci = pkgs.mkShell {
 
 options for [ryanccn/attic-action](https://github.com/ryanccn/attic-action) to use an attic cache
 
-### `token`, `fetch_depth`
+### `token`, `fetch_depth`, `submodules`
 
 options for [actions/checkout](https://github.com/actions/checkout)
 
@@ -68,13 +65,29 @@ options for [actions/create-github-app-token](https://github.com/actions/create-
 
 ## Outputs
 
+### `platform`
+
+git platform (`github`/`gitea`/`forgejo`)
+
+### `os`
+
+runner operating system (`linux`/`darwin`/`windows`)
+
+### `arch`
+
+runner architecture (`amd64`/`arm64`/`arm`/`386`)
+
 ### `token`
 
 token created by [actions/create-github-app-token](https://github.com/actions/create-github-app-token)
 
-### `user`
+### `name`
 
 the username from the token, used for git operations
+
+### `email`
+
+the email from the token, used for git operations
 
 ### `system`
 
