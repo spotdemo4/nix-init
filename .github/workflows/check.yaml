@@ -27,7 +27,7 @@ jobs:
 
       - id: cache
         name: Restore renovate check
-        uses: spotdemo4/nix-nario-action/restore@6d6cf585c67912ae32023cb156f9860fb8dcd793 # v0.7.5
+        uses: spotdemo4/nix-nario-action/restore@d069289719df671c916f8a2ea1fe6e070a213cb9 # v0.7.6
         with:
           path: ".#checks.${{ steps.init.outputs.system }}.renovate"
 
@@ -36,6 +36,6 @@ jobs:
 
       - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
         name: Save renovate check
-        uses: spotdemo4/nix-nario-action/save@6d6cf585c67912ae32023cb156f9860fb8dcd793 # v0.7.5
+        uses: spotdemo4/nix-nario-action/save@d069289719df671c916f8a2ea1fe6e070a213cb9 # v0.7.6
         with:
           path: ".#checks.${{ steps.init.outputs.system }}.renovate"
