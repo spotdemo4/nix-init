@@ -36,6 +36,7 @@
             trev.overlays.libs
           ];
         };
+        fs = pkgs.lib.fileset;
       in
       {
         devShells = {
@@ -67,18 +68,42 @@
         };
 
         checks = pkgs.lib.mkChecks {
-          action = {
-            src = ./.;
+          actions = {
+            src = fs.toSource {
+              root = ./.;
+              fileset = fs.unions [
+                ./action.yaml
+                ./.github/workflows
+              ];
+            };
             deps = with pkgs; [
               action-validator
+              octoscan
             ];
             script = ''
-              action-validator action.yaml
+              action-validator **/*.yaml
+              octoscan scan .
+            '';
+          };
+
+          renovate = {
+            src = fs.toSource {
+              root = ./.github;
+              fileset = ./.github/renovate.json;
+            };
+            deps = with pkgs; [
+              renovate
+            ];
+            script = ''
+              renovate-config-validator renovate.json
             '';
           };
 
           nix = {
-            src = ./.;
+            src = fs.toSource {
+              root = ./.;
+              fileset = fs.fileFilter (file: file.hasExt "nix") ./.;
+            };
             deps = with pkgs; [
               nixfmt-tree
             ];
@@ -87,19 +112,16 @@
             '';
           };
 
-          actions = {
-            src = ./.;
+          prettier = {
+            src = fs.toSource {
+              root = ./.;
+              fileset = fs.fileFilter (file: file.hasExt "yaml" || file.hasExt "json" || file.hasExt "md") ./.;
+            };
             deps = with pkgs; [
               prettier
-              octoscan
-              action-validator
-              renovate
             ];
             script = ''
-              prettier --check "**/*.json" "**/*.yaml"
-              octoscan scan .github
-              action-validator .github/**/*.yaml
-              renovate-config-validator .github/renovate.json
+              prettier --check .
             '';
           };
         };

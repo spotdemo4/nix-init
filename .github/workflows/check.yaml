@@ -26,16 +26,16 @@ jobs:
         uses: spotdemo4/nix-init@main
 
       - id: cache
-        name: Restore actions check
-        uses: spotdemo4/nix-nario-action/restore@81c83fd8b12ffc507494b2671626093026e99a82 # v0.7.4
+        name: Restore renovate check
+        uses: spotdemo4/nix-nario-action/restore@6d6cf585c67912ae32023cb156f9860fb8dcd793 # v0.7.5
         with:
-          path: ".#checks.${{ steps.init.outputs.system }}.actions"
+          path: ".#checks.${{ steps.init.outputs.system }}.renovate"
 
       - name: Run checks
         run: nix flake check
 
       - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-        name: Save actions check
-        uses: spotdemo4/nix-nario-action/save@81c83fd8b12ffc507494b2671626093026e99a82 # v0.7.4
+        name: Save renovate check
+        uses: spotdemo4/nix-nario-action/save@6d6cf585c67912ae32023cb156f9860fb8dcd793 # v0.7.5
         with:
-          path: ".#checks.${{ steps.init.outputs.system }}.actions"
+          path: ".#checks.${{ steps.init.outputs.system }}.renovate"
