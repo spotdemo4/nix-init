@@ -132,7 +132,7 @@ runs:
         inputs-from: .
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' && steps.attic.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@86d6cf585c67912ae32023cb156f9860fb8dcd793 # v0.7.5
+      uses: spotdemo4/nix-nario-action/save@6d6cf585c67912ae32023cb156f9860fb8dcd793 # v0.7.5
       with:
         path: nixpkgs#attic-client
 
