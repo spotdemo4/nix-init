@@ -27,7 +27,7 @@ jobs:
 
       - id: cache
         name: Restore actions check
-        uses: spotdemo4/nix-nario-action/restore@4870c5960d29ae9a8878291fd6307c769e75e17d # v0.7.3
+        uses: spotdemo4/nix-nario-action/restore@81c83fd8b12ffc507494b2671626093026e99a82 # v0.7.4
         with:
           path: ".#checks.${{ steps.init.outputs.system }}.actions"
 
@@ -36,6 +36,6 @@ jobs:
 
       - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
         name: Save actions check
-        uses: spotdemo4/nix-nario-action/save@4870c5960d29ae9a8878291fd6307c769e75e17d # v0.7.3
+        uses: spotdemo4/nix-nario-action/save@81c83fd8b12ffc507494b2671626093026e99a82 # v0.7.4
         with:
           path: ".#checks.${{ steps.init.outputs.system }}.actions"
