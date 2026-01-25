@@ -100,11 +100,19 @@ runs:
         echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
         echo "nix system: ${SYSTEM}"
 
+    # flake setup
+
+    - id: flake
+      uses: spotdemo4/nix-nario-action/restore@41a9f79d8d7c6d07e48148d9e8051fadb443553f # v0.7.0
+
+    - if: ${{ steps.flake.outputs.cache-hit != 'true' }}
+      uses: spotdemo4/nix-nario-action/save@41a9f79d8d7c6d07e48148d9e8051fadb443553f # v0.7.0
+
     # attic setup
 
     - id: attic
       if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
-      uses: spotdemo4/nix-nario-action/restore@f270249a617dd082f1605aed880425b1ba02c955 # v0.5.0
+      uses: spotdemo4/nix-nario-action/restore@41a9f79d8d7c6d07e48148d9e8051fadb443553f # v0.7.0
       with:
         path: nixpkgs#attic-client
 
@@ -118,7 +126,7 @@ runs:
         inputs-from: .
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' && steps.attic.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@f270249a617dd082f1605aed880425b1ba02c955 # v0.5.0
+      uses: spotdemo4/nix-nario-action/save@41a9f79d8d7c6d07e48148d9e8051fadb443553f # v0.7.0
       with:
         path: nixpkgs#attic-client
 
@@ -126,7 +134,7 @@ runs:
 
     - id: shell
       if: ${{ inputs.shell != '' }}
-      uses: spotdemo4/nix-nario-action/restore@f270249a617dd082f1605aed880425b1ba02c955 # v0.5.0
+      uses: spotdemo4/nix-nario-action/restore@41a9f79d8d7c6d07e48148d9e8051fadb443553f # v0.7.0
       with:
         path: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
 
@@ -136,6 +144,6 @@ runs:
         arguments: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
 
     - if: ${{ inputs.shell != '' && steps.shell.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@f270249a617dd082f1605aed880425b1ba02c955 # v0.5.0
+      uses: spotdemo4/nix-nario-action/save@41a9f79d8d7c6d07e48148d9e8051fadb443553f # v0.7.0
       with:
         path: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
