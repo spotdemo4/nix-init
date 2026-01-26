@@ -55,7 +55,7 @@ devShells.ci = pkgs.mkShell {
 
 options for [ryanccn/attic-action](https://github.com/ryanccn/attic-action) to use an attic cache
 
-### `token`, `fetch_depth`, `submodules`
+### `token`, `ref`, `fetch_depth`, `submodules`
 
 options for [actions/checkout](https://github.com/actions/checkout)
 

@@ -15,6 +15,8 @@ inputs:
     description: "github app id"
   app_key:
     description: "github app private key"
+  ref:
+    description: "branch, tag or sha to checkout"
   fetch_depth:
     description: "number of commits to fetch"
     default: "1"
@@ -62,11 +64,12 @@ runs:
     # checkout
 
     - id: checkout
-      uses: spotdemo4/better-checkout@b5c8c788dc5653b255e55658e8c2910b62c5f13b # v0.4.0
+      uses: spotdemo4/better-checkout@9a8cc716065857724440d98bc9b2bc08be8ab4bd # v0.5.0
       with:
         token: ${{ inputs.token }}
         app-id: ${{ inputs.app_id }}
         private-key: ${{ inputs.app_key }}
+        ref: ${{ inputs.ref }}
         fetch-depth: ${{ inputs.fetch_depth }}
         submodules: ${{ inputs.submodules }}
 
