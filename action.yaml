@@ -79,17 +79,20 @@ runs:
       uses: wimpysworld/nothing-but-nix@dd6ef566962bfa4656301706035da97ebbe90e9b # v9
       continue-on-error: true
       with:
-        hatchet-protocol: holster
-        root-safe-haven: "5120"
-        mnt-safe-haven: "5120"
+        hatchet-protocol: carve
 
     - shell: bash
       run: |
-        # Check if nix is already installed
+        # Setup nix environment
 
         if command -v nix &> /dev/null; then
           echo "NIX_INSTALLED=true" >> $GITHUB_ENV
         fi
+
+        TMPNIX="/nix/_tmp"
+        sudo mkdir -p "${TMPNIX}"
+        sudo chmod 1777 "${TMPNIX}"
+        echo "TMPDIR=${TMPNIX}" >> $GITHUB_ENV
 
     - if: ${{ env.NIX_INSTALLED != 'true' }}
       uses: DeterminateSystems/determinate-nix-action@89ab342bd48ff7318caf8d39d6a330c7b1df8f2f # v3.15.2
