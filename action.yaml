@@ -79,7 +79,7 @@ runs:
       uses: wimpysworld/nothing-but-nix@dd6ef566962bfa4656301706035da97ebbe90e9b # v9
       continue-on-error: true
       with:
-        hatchet-protocol: carve
+        hatchet-protocol: holster
 
     - if: ${{ env.NIX_INSTALLED != 'true' }}
       uses: DeterminateSystems/determinate-nix-action@89ab342bd48ff7318caf8d39d6a330c7b1df8f2f # v3.15.2
