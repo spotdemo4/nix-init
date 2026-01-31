@@ -81,20 +81,6 @@ runs:
       with:
         hatchet-protocol: carve
 
-    - shell: bash
-      run: |
-        # Setup nix environment
-
-        if command -v nix &> /dev/null; then
-          echo "NIX_INSTALLED=true" >> $GITHUB_ENV
-        fi
-
-        TMPNIX="/nix/_tmp"
-        if sudo mkdir -p "${TMPNIX}"; then
-          sudo chmod 1777 "${TMPNIX}"
-          echo "TMPDIR=${TMPNIX}" >> $GITHUB_ENV
-        fi
-
     - if: ${{ env.NIX_INSTALLED != 'true' }}
       uses: DeterminateSystems/determinate-nix-action@89ab342bd48ff7318caf8d39d6a330c7b1df8f2f # v3.15.2
       with:
@@ -116,16 +102,16 @@ runs:
     # flake setup
 
     - id: flake
-      uses: spotdemo4/nix-nario-action/restore@f45fd573ef62efaca693101c8c55a997475798b6 # v0.9.0
+      uses: spotdemo4/nix-nario-action/restore@3cc52a69a42c89b088063fc45c4193b48514fce1 # v0.11.0
 
     - if: ${{ steps.flake.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@f45fd573ef62efaca693101c8c55a997475798b6 # v0.9.0
+      uses: spotdemo4/nix-nario-action/save@3cc52a69a42c89b088063fc45c4193b48514fce1 # v0.11.0
 
     # attic setup
 
     - id: attic
       if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
-      uses: spotdemo4/nix-nario-action/restore@f45fd573ef62efaca693101c8c55a997475798b6 # v0.9.0
+      uses: spotdemo4/nix-nario-action/restore@3cc52a69a42c89b088063fc45c4193b48514fce1 # v0.11.0
       with:
         path: nixpkgs#attic-client
 
@@ -139,7 +125,7 @@ runs:
         inputs-from: .
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' && steps.attic.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@f45fd573ef62efaca693101c8c55a997475798b6 # v0.9.0
+      uses: spotdemo4/nix-nario-action/save@3cc52a69a42c89b088063fc45c4193b48514fce1 # v0.11.0
       with:
         path: nixpkgs#attic-client
 
@@ -147,7 +133,7 @@ runs:
 
     - id: shell
       if: ${{ inputs.shell != '' }}
-      uses: spotdemo4/nix-nario-action/restore@f45fd573ef62efaca693101c8c55a997475798b6 # v0.9.0
+      uses: spotdemo4/nix-nario-action/restore@3cc52a69a42c89b088063fc45c4193b48514fce1 # v0.11.0
       with:
         path: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
 
@@ -157,6 +143,6 @@ runs:
         arguments: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
 
     - if: ${{ inputs.shell != '' && steps.shell.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@f45fd573ef62efaca693101c8c55a997475798b6 # v0.9.0
+      uses: spotdemo4/nix-nario-action/save@3cc52a69a42c89b088063fc45c4193b48514fce1 # v0.11.0
       with:
         path: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
