@@ -80,6 +80,8 @@ runs:
       continue-on-error: true
       with:
         hatchet-protocol: holster
+        root-safe-haven: "5120"
+        mnt-safe-haven: "5120"
 
     - if: ${{ env.NIX_INSTALLED != 'true' }}
       uses: DeterminateSystems/determinate-nix-action@89ab342bd48ff7318caf8d39d6a330c7b1df8f2f # v3.15.2
