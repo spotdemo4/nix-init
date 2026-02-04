@@ -23,17 +23,17 @@
       "automerge": true
     },
     {
-      "groupName": "nix inputs",
-      "matchManagers": ["nix"]
+      "matchManagers": ["nix"],
+      "groupName": "nix inputs"
     },
     {
-      "groupName": "github actions",
+      "matchManagers": ["github-actions"],
       "matchFileNames": [".github/workflows/*.yaml"],
-      "matchManagers": ["github-actions"]
+      "groupName": "github actions"
     },
     {
-      "commitMessagePrefix": "feat: ",
-      "matchFileNames": ["**/action.yaml"]
+      "matchFileNames": ["**/action.yaml"],
+      "commitMessagePrefix": "feat: "
     }
   ]
 }
