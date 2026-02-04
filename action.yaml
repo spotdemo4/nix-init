@@ -104,16 +104,16 @@ runs:
     # flake setup
 
     - id: flake
-      uses: spotdemo4/nix-nario-action/restore@4fcb9e563c05dc1d258086fee3122933bdab2292 # v0.12.2
+      uses: spotdemo4/nix-nario-action/restore@ed8ee8d49d6eedae68284e8a81ca49b967d930ef # v0.12.3
 
     - if: ${{ steps.flake.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@4fcb9e563c05dc1d258086fee3122933bdab2292 # v0.12.2
+      uses: spotdemo4/nix-nario-action/save@ed8ee8d49d6eedae68284e8a81ca49b967d930ef # v0.12.3
 
     # attic setup
 
     - id: attic
       if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
-      uses: spotdemo4/nix-nario-action/restore@4fcb9e563c05dc1d258086fee3122933bdab2292 # v0.12.2
+      uses: spotdemo4/nix-nario-action/restore@ed8ee8d49d6eedae68284e8a81ca49b967d930ef # v0.12.3
       with:
         path: nixpkgs#attic-client
 
@@ -127,7 +127,7 @@ runs:
         inputs-from: .
 
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' && steps.attic.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@4fcb9e563c05dc1d258086fee3122933bdab2292 # v0.12.2
+      uses: spotdemo4/nix-nario-action/save@ed8ee8d49d6eedae68284e8a81ca49b967d930ef # v0.12.3
       with:
         path: nixpkgs#attic-client
 
@@ -135,7 +135,7 @@ runs:
 
     - id: shell
       if: ${{ inputs.shell != '' }}
-      uses: spotdemo4/nix-nario-action/restore@4fcb9e563c05dc1d258086fee3122933bdab2292 # v0.12.2
+      uses: spotdemo4/nix-nario-action/restore@ed8ee8d49d6eedae68284e8a81ca49b967d930ef # v0.12.3
       with:
         path: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
 
@@ -145,6 +145,6 @@ runs:
         arguments: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
 
     - if: ${{ inputs.shell != '' && steps.shell.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@4fcb9e563c05dc1d258086fee3122933bdab2292 # v0.12.2
+      uses: spotdemo4/nix-nario-action/save@ed8ee8d49d6eedae68284e8a81ca49b967d930ef # v0.12.3
       with:
         path: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
