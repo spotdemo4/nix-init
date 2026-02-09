@@ -95,11 +95,17 @@ runs:
     - id: nix
       shell: bash
       run: |
-        # Determine nix system
+        # Setup nix environment
 
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
         echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
         echo "nix system: ${SYSTEM}"
+
+        if NIX_CONFIG=$(nix eval --raw --file flake.nix nixConfig --apply 'import {{ github.action_path }}/kv.nix') &> /dev/null; then
+          echo "NIX_CONFIG=${NIX_CONFIG}" >> $GITHUB_ENV
+          echo "set nix config:"
+          echo "${NIX_CONFIG}"
+        fi
 
     # flake setup
 
