@@ -9,7 +9,7 @@ composite action to initialize nix-based repos. Got tired of writing basically t
 - checkout the repository
 - setup git user for pushing changes
 - install nix
-- setup caching via [attic-action](https://github.com/ryanccn/attic-action) (optional)
+- setup caching via [attic-action](https://github.com/ryanccn/attic-action) or [niks3-action](https://github.com/spotdemo4/niks3-action) (optional)
 - use development shell environment from flake (optional)
 
 it usually runs in < 1 minute, and also works with self-hosted/gitea/forgejo action runners
@@ -53,7 +53,11 @@ devShells.ci = pkgs.mkShell {
 
 ### `attic_endpoint`, `attic_cache`, `attic_token`
 
-options for [ryanccn/attic-action](https://github.com/ryanccn/attic-action) to use an attic cache
+options for [ryanccn/attic-action](https://github.com/ryanccn/attic-action) to use an [attic](https://github.com/zhaofengli/attic) cache
+
+### `niks3_server_url`, `niks3_auth_token`, `niks3_audience`
+
+options for [niks3-action](https://github.com/spotdemo4/niks3-action) to use a [niks3](https://github.com/Mic92/niks3) cache
 
 ### `token`, `ref`, `fetch_depth`, `submodules`
 

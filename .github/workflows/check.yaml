@@ -12,6 +12,7 @@ concurrency:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   check:
@@ -21,24 +22,10 @@ jobs:
         os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15]
     runs-on: ${{ matrix.os }}
     steps:
-      - id: init
-        name: Initialize
+      - name: Initialize
         uses: spotdemo4/nix-init@main
-
-      - id: cache
-        name: Restore renovate check
-        uses: spotdemo4/nix-nario-action/restore@0460cb8e5f6d87c48d145169b77576ed537d8f93 # v0.12.4
         with:
-          path: ".#checks.${{ steps.init.outputs.system }}.renovate"
-
-      - name: Get config
-        run: nix config show
+          niks3_audience: https://nix.trev.zip
 
       - name: Run checks
         run: nix flake check
-
-      - if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-        name: Save renovate check
-        uses: spotdemo4/nix-nario-action/save@0460cb8e5f6d87c48d145169b77576ed537d8f93 # v0.12.4
-        with:
-          path: ".#checks.${{ steps.init.outputs.system }}.renovate"

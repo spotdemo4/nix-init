@@ -23,14 +23,24 @@ inputs:
   submodules:
     description: "whether to fetch submodules"
     default: "false"
+
   # attic
   attic_endpoint:
-    description: "URL without the cache name"
+    description: "URL of attic server"
     default: "https://cache.trev.zip/"
   attic_cache:
     description: "cache name"
   attic_token:
     description: "authorization token"
+
+  # niks3
+  niks3_server_url:
+    description: "URL of niks3 server"
+  niks3_auth_token:
+    description: "authentication token"
+  niks3_audience:
+    description: "audience for OIDC authentication"
+
   # nix
   shell:
     description: "development shell to use from flake"
@@ -105,7 +115,6 @@ runs:
           CONFIG=$(mktemp -p "${{ runner.temp }}")
           echo "${NIX_CONFIG}" > "${CONFIG}"
           echo "NIX_USER_CONF_FILES=${CONFIG}" >> $GITHUB_ENV
-
           echo "set nix config from flake.nix"
           echo "${NIX_CONFIG}"
         fi
@@ -120,12 +129,6 @@ runs:
 
     # attic setup
 
-    - id: attic
-      if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
-      uses: spotdemo4/nix-nario-action/restore@0460cb8e5f6d87c48d145169b77576ed537d8f93 # v0.12.4
-      with:
-        path: nixpkgs#attic-client
-
     - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
       uses: ryanccn/attic-action@1887fd507f03327c96c64cca30118c96eb17fdad # v0.4.1
       continue-on-error: true
@@ -135,15 +138,20 @@ runs:
         token: ${{ inputs.attic_token }}
         inputs-from: .
 
-    - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' && steps.attic.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@0460cb8e5f6d87c48d145169b77576ed537d8f93 # v0.12.4
+    # niks3 setup
+
+    - if: ${{ ( inputs.niks3_server_url != '' && inputs.niks3_auth_token != '' ) || inputs.niks3_audience != '' }}
+      uses: spotdemo4/niks3-action@5cfd2b619e4b087ad8f38e94d1167667ceaa300d # v0.0.2
+      continue-on-error: true
       with:
-        path: nixpkgs#attic-client
+        server-url: ${{ inputs.niks3_server_url }}
+        auth-token: ${{ inputs.niks3_auth_token }}
+        audience: ${{ inputs.niks3_audience }}
 
     # development shell setup
 
     - id: shell
-      if: ${{ inputs.shell != '' }}
+      if: ${{ inputs.shell != '' && inputs.attic_token == '' && inputs.niks3_auth_token == '' && inputs.niks3_audience == '' }}
       uses: spotdemo4/nix-nario-action/restore@0460cb8e5f6d87c48d145169b77576ed537d8f93 # v0.12.4
       with:
         path: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
@@ -153,7 +161,7 @@ runs:
       with:
         arguments: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
 
-    - if: ${{ inputs.shell != '' && steps.shell.outputs.cache-hit != 'true' }}
+    - if: ${{ inputs.shell != '' && inputs.attic_token == '' && inputs.niks3_auth_token == '' && inputs.niks3_audience == '' && steps.shell.outputs.cache-hit != 'true' }}
       uses: spotdemo4/nix-nario-action/save@0460cb8e5f6d87c48d145169b77576ed537d8f93 # v0.12.4
       with:
         path: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
