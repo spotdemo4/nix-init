@@ -26,10 +26,6 @@ inputs:
     description: "whether to fetch submodules"
     default: "false"
 
-  # auth
-  audience:
-    description: "audience for OIDC authentication"
-
   # attic
   attic_url:
     description: "URL of attic server"
@@ -45,6 +41,8 @@ inputs:
     default: "https://niks3.trev.zip/"
   niks3_token:
     description: "authentication token"
+  audience:
+    description: "audience for OIDC authentication"
 
   # dev shell
   shell:
