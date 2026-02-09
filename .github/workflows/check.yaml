@@ -25,7 +25,7 @@ jobs:
       - name: Initialize
         uses: spotdemo4/nix-init@main
         with:
-          niks3_audience: https://niks3.trev.zip
+          audience: https://niks3.trev.zip
 
       - name: Run checks
         run: nix flake check
