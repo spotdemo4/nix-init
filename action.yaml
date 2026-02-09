@@ -102,8 +102,12 @@ runs:
         echo "nix system: ${SYSTEM}"
 
         if NIX_CONFIG=$(nix eval --raw --file flake.nix nixConfig --apply 'import ${{ github.action_path }}/kv.nix') &> /dev/null; then
-          echo "NIX_CONFIG=${NIX_CONFIG}" >> $GITHUB_ENV
-          echo "set nix config:"
+
+          CONFIG=$(mktemp -p "${{ runner.temp }}")
+          echo "${NIX_CONFIG}" > "${CONFIG}"
+          echo "NIX_USER_CONF_FILES=${CONFIG}" >> $GITHUB_ENV
+
+          echo "set nix config from flake.nix"
           echo "${NIX_CONFIG}"
         fi
 
