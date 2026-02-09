@@ -137,7 +137,7 @@ runs:
 
     # niks3 setup
 
-    - if: ${{ ( inputs.niks3_server_url != '' && inputs.niks3_auth_token != '' ) || inputs.niks3_audience != '' }}
+    - if: ${{ ( inputs.niks3_server_url != '' && inputs.niks3_auth_token != '' ) || inputs.audience != '' }}
       uses: spotdemo4/niks3-action@0074bc1303dfae53c5246b3f5adbb55919003d5a # v0.1.0
       continue-on-error: true
       with:
@@ -148,7 +148,7 @@ runs:
     # development shell setup
 
     - id: shell
-      if: ${{ inputs.shell != '' && inputs.attic_token == '' && inputs.niks3_token == '' && inputs.niks3_audience == '' }}
+      if: ${{ inputs.shell != '' && inputs.audience == '' && inputs.attic_token == '' && inputs.niks3_token == '' }}
       uses: spotdemo4/nix-nario-action/restore@0460cb8e5f6d87c48d145169b77576ed537d8f93 # v0.12.4
       with:
         path: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
@@ -158,7 +158,7 @@ runs:
       with:
         arguments: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
 
-    - if: ${{ inputs.shell != '' && inputs.attic_token == '' && inputs.niks3_token == '' && inputs.niks3_audience == '' && steps.shell.outputs.cache-hit != 'true' }}
+    - if: ${{ inputs.shell != '' && inputs.audience == '' && inputs.attic_token == '' && inputs.niks3_token == '' && steps.shell.outputs.cache-hit != 'true' }}
       uses: spotdemo4/nix-nario-action/save@0460cb8e5f6d87c48d145169b77576ed537d8f93 # v0.12.4
       with:
         path: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"

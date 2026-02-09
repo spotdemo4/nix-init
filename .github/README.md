@@ -55,7 +55,7 @@ devShells.ci = pkgs.mkShell {
 
 options for [ryanccn/attic-action](https://github.com/ryanccn/attic-action) to use an [attic](https://github.com/zhaofengli/attic) cache
 
-### `niks3_url`, `niks3_token`, `niks3_audience`
+### `niks3_url`, `niks3_token`, `audience`
 
 options for [niks3-action](https://github.com/spotdemo4/niks3-action) to use a [niks3](https://github.com/Mic92/niks3) cache
 
