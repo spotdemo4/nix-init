@@ -31,6 +31,9 @@ jobs:
         with:
           path: ".#checks.${{ steps.init.outputs.system }}.renovate"
 
+      - name: Get config
+        run: nix config show
+
       - name: Run checks
         run: nix flake check
 
