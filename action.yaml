@@ -7,14 +7,16 @@ branding:
   color: gray-dark
 
 inputs:
-  # checkout
-  token:
-    description: "github token for checkout and git operations"
-    default: "${{ github.token }}"
+  # app
   app_id:
     description: "github app id"
   app_key:
     description: "github app private key"
+
+  # checkout
+  token:
+    description: "github token for checkout and git operations"
+    default: "${{ github.token }}"
   ref:
     description: "branch, tag or sha to checkout"
   fetch_depth:
@@ -23,6 +25,10 @@ inputs:
   submodules:
     description: "whether to fetch submodules"
     default: "false"
+
+  # auth
+  audience:
+    description: "audience for OIDC authentication"
 
   # attic
   attic_url:
@@ -39,10 +45,8 @@ inputs:
     default: "https://niks3.trev.zip/"
   niks3_token:
     description: "authentication token"
-  niks3_audience:
-    description: "audience for OIDC authentication"
 
-  # nix
+  # dev shell
   shell:
     description: "development shell to use from flake"
 
@@ -134,12 +138,12 @@ runs:
     # niks3 setup
 
     - if: ${{ ( inputs.niks3_server_url != '' && inputs.niks3_auth_token != '' ) || inputs.niks3_audience != '' }}
-      uses: spotdemo4/niks3-action@c6da5e4a52d23d1dd388977c865291ceaa0175eb # v0.0.4
+      uses: spotdemo4/niks3-action@0074bc1303dfae53c5246b3f5adbb55919003d5a # v0.1.0
       continue-on-error: true
       with:
         server-url: ${{ inputs.niks3_url }}
         auth-token: ${{ inputs.niks3_token }}
-        audience: ${{ inputs.niks3_audience }}
+        audience: ${{ inputs.audience }}
 
     # development shell setup
 
