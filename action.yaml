@@ -96,13 +96,10 @@ runs:
         root-safe-haven: "5120"
         mnt-safe-haven: "5120"
 
-    - if: ${{ env.NIX_INSTALLED != 'true' }}
-      uses: DeterminateSystems/nix-installer-action@a4f499a84c7bd15903c67fa79a1d98dd9b6d8c84 # main
+    - uses: cachix/install-nix-action@4e002c8ec80594ecd40e759629461e26c8abed15 # v31.9.0
       with:
-        determinate: false # stop flakehub login
-        github-token: ${{ steps.checkout.outputs.token || inputs.token }}
-        extra-conf: |
-          eval-cores = 0
+        github_access_token: ${{ steps.checkout.outputs.token || inputs.token }}
+        extra_nix_config: |
           accept-flake-config = true
           download-buffer-size = 524288000
 
@@ -119,20 +116,9 @@ runs:
           CONFIG=$(mktemp -p "${{ runner.temp }}")
           echo "${NIX_CONFIG}" > "${CONFIG}"
           echo "NIX_USER_CONF_FILES=${CONFIG}" >> $GITHUB_ENV
-          echo "set nix config from flake.nix"
+          echo "set nix config from flake.nix:"
           echo "${NIX_CONFIG}"
         fi
-
-    # attic setup
-
-    - if: ${{ inputs.attic_cache != '' && inputs.attic_token != '' }}
-      uses: ryanccn/attic-action@1887fd507f03327c96c64cca30118c96eb17fdad # v0.4.1
-      continue-on-error: true
-      with:
-        endpoint: ${{ inputs.attic_url }}
-        token: ${{ inputs.attic_token }}
-        cache: ${{ inputs.attic_cache }}
-        inputs-from: .
 
     # niks3 setup
 
@@ -146,18 +132,7 @@ runs:
 
     # development shell setup
 
-    - id: shell
-      if: ${{ inputs.shell != '' && inputs.audience == '' && inputs.attic_token == '' && inputs.niks3_token == '' }}
-      uses: spotdemo4/nix-nario-action/restore@0460cb8e5f6d87c48d145169b77576ed537d8f93 # v0.12.4
-      with:
-        path: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
-
     - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1
       with:
         arguments: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
-
-    - if: ${{ inputs.shell != '' && inputs.audience == '' && inputs.attic_token == '' && inputs.niks3_token == '' && steps.shell.outputs.cache-hit != 'true' }}
-      uses: spotdemo4/nix-nario-action/save@0460cb8e5f6d87c48d145169b77576ed537d8f93 # v0.12.4
-      with:
-        path: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
