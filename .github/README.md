@@ -9,7 +9,7 @@ composite action to initialize nix-based repos. Got tired of writing basically t
 - checkout the repository
 - setup git user for pushing changes
 - install nix
-- setup caching [niks3-action](https://github.com/spotdemo4/niks3-action) (optional)
+- setup caching with [spotdemo4/niks3-action](https://github.com/spotdemo4/niks3-action) (optional)
 - use development shell environment from flake (optional)
 
 it usually runs in < 1 minute, and also works with self-hosted/gitea/forgejo action runners
