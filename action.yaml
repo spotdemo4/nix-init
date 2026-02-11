@@ -90,6 +90,7 @@ runs:
 
     - uses: cachix/install-nix-action@4e002c8ec80594ecd40e759629461e26c8abed15 # v31.9.0
       with:
+        nix_path: nixpkgs=flake:nixpkgs
         github_access_token: ${{ steps.checkout.outputs.token || inputs.token }}
         extra_nix_config: |
           accept-flake-config = true
@@ -98,7 +99,7 @@ runs:
     - id: nix
       shell: bash
       run: |
-        # Setup nix environment
+        # Set nix config
 
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
         echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
