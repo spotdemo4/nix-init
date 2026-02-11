@@ -43,6 +43,7 @@ inputs:
     description: "authentication token"
   audience:
     description: "audience for OIDC authentication"
+    default: "${{ github.repository_owner == 'spotdemo4' && 'https://niks3.trev.zip' || '' }}"
 
   # dev shell
   shell:
