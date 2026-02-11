@@ -97,8 +97,9 @@ runs:
         mnt-safe-haven: "5120"
 
     - if: ${{ env.NIX_INSTALLED != 'true' }}
-      uses: DeterminateSystems/determinate-nix-action@89ab342bd48ff7318caf8d39d6a330c7b1df8f2f # v3.15.2
+      uses: DeterminateSystems/nix-installer-action@a4f499a84c7bd15903c67fa79a1d98dd9b6d8c84 # main
       with:
+        determinate: false # stop flakehub login
         github-token: ${{ steps.checkout.outputs.token || inputs.token }}
         extra-conf: |
           eval-cores = 0
