@@ -117,7 +117,7 @@ runs:
     # cache setup
 
     - if: ${{ ( inputs.niks3_server_url != '' && inputs.niks3_auth_token != '' ) || inputs.audience != '' }}
-      uses: spotdemo4/niks3-action@0074bc1303dfae53c5246b3f5adbb55919003d5a # v0.1.0
+      uses: spotdemo4/niks3-action@b708e1d794b01777c2f8ec1be8d93c757811da3a # v0.2.0
       continue-on-error: true
       with:
         server-url: ${{ inputs.niks3_url }}
