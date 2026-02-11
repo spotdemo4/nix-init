@@ -7,9 +7,10 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
-  nix:
+  flake:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize

@@ -3,18 +3,30 @@ name: release
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
 
 concurrency:
   group: release
 
 permissions:
-  contents: write
+  contents: read
+  id-token: write
+  packages: write
 
 jobs:
-  action:
+  release:
     runs-on: ubuntu-latest
     steps:
-      - name: Release
-        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
+      - id: init
+        name: Initialize
+        uses: spotdemo4/nix-init@216e4561869851deddcbe04c81f2e3a1e0236198 # v1.27.3
         with:
-          generate_release_notes: true
+          app_id: ${{ vars.CLIENT_ID }}
+          app_key: ${{ secrets.PRIVATE_KEY }}
+          fetch_depth: 0
+          shell: release
+
+      - name: Release
+        run: flake-release
+        env:
+          GITHUB_TOKEN: ${{ steps.init.outputs.token }}
