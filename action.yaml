@@ -26,16 +26,7 @@ inputs:
     description: "whether to fetch submodules"
     default: "false"
 
-  # attic
-  attic_url:
-    description: "URL of attic server"
-    default: "https://cache.trev.zip/"
-  attic_token:
-    description: "authorization token"
-  attic_cache:
-    description: "cache name"
-
-  # niks3
+  # cache
   niks3_url:
     description: "URL of niks3 server"
     default: "https://niks3.trev.zip/"
@@ -111,17 +102,18 @@ runs:
 
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
         echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
-        echo "nix system: ${SYSTEM}"
+        echo "System: ${SYSTEM}"
 
         if NIX_CONFIG=$(nix eval --raw --file flake.nix nixConfig --apply 'import ${{ github.action_path }}/kv.nix') &> /dev/null; then
           CONFIG=$(mktemp -p "${{ runner.temp }}")
           echo "${NIX_CONFIG}" > "${CONFIG}"
           echo "NIX_USER_CONF_FILES=${CONFIG}" >> $GITHUB_ENV
-          echo "set nix config from flake.nix:"
+          echo "::group::Set nix config"
           echo "${NIX_CONFIG}"
+          echo "::endgroup::"
         fi
 
-    # niks3 setup
+    # cache setup
 
     - if: ${{ ( inputs.niks3_server_url != '' && inputs.niks3_auth_token != '' ) || inputs.audience != '' }}
       uses: spotdemo4/niks3-action@0074bc1303dfae53c5246b3f5adbb55919003d5a # v0.1.0
@@ -131,7 +123,7 @@ runs:
         auth-token: ${{ inputs.niks3_token }}
         audience: ${{ inputs.audience }}
 
-    # development shell setup
+    # shell setup
 
     - if: ${{ inputs.shell != '' }}
       uses: nicknovitski/nix-develop@9be7cfb4b10451d3390a75dc18ad0465bed4932a # v1.2.1

@@ -9,7 +9,7 @@ composite action to initialize nix-based repos. Got tired of writing basically t
 - checkout the repository
 - setup git user for pushing changes
 - install nix
-- setup caching via [attic-action](https://github.com/ryanccn/attic-action) or [niks3-action](https://github.com/spotdemo4/niks3-action) (optional)
+- setup caching [niks3-action](https://github.com/spotdemo4/niks3-action) (optional)
 - use development shell environment from flake (optional)
 
 it usually runs in < 1 minute, and also works with self-hosted/gitea/forgejo action runners
@@ -19,14 +19,21 @@ it usually runs in < 1 minute, and also works with self-hosted/gitea/forgejo act
 ```yaml
 - name: Initialize
   uses: spotdemo4/nix-init@v1.27.2
-  with:
-    shell: ci
-    attic_endpoint: https://trev.zip/
-    attic_cache: nixos
-    attic_token: ${{ secrets.ATTIC_TOKEN }}
 ```
 
 ## Inputs
+
+### `app_id`, `app_key`
+
+options for [actions/create-github-app-token](https://github.com/actions/create-github-app-token)
+
+### `token`, `ref`, `fetch_depth`, `submodules`
+
+options for [actions/checkout](https://github.com/actions/checkout)
+
+### `niks3_url`, `niks3_token`, `audience`
+
+options for [niks3-action](https://github.com/spotdemo4/niks3-action) to use a [niks3](https://github.com/Mic92/niks3) cache
 
 ### `shell`
 
@@ -50,22 +57,6 @@ devShells.ci = pkgs.mkShell {
 - name: Check flake
   run: flake-checker -f
 ```
-
-### `attic_url`, `attic_token`, `attic_cache`
-
-options for [ryanccn/attic-action](https://github.com/ryanccn/attic-action) to use an [attic](https://github.com/zhaofengli/attic) cache
-
-### `niks3_url`, `niks3_token`, `audience`
-
-options for [niks3-action](https://github.com/spotdemo4/niks3-action) to use a [niks3](https://github.com/Mic92/niks3) cache
-
-### `token`, `ref`, `fetch_depth`, `submodules`
-
-options for [actions/checkout](https://github.com/actions/checkout)
-
-### `app_id`, `app_key`
-
-options for [actions/create-github-app-token](https://github.com/actions/create-github-app-token)
 
 ## Outputs
 
