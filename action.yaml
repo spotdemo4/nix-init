@@ -10,8 +10,10 @@ inputs:
   # app
   app_id:
     description: "github app id"
+    default: "${{ vars.APP_ID }}"
   app_key:
     description: "github app private key"
+    default: "${{ secrets.APP_KEY }}"
 
   # checkout
   token:
