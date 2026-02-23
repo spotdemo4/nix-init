@@ -81,7 +81,7 @@ runs:
     # nix setup
 
     - if: ${{ steps.checkout.outputs.platform == 'github' && runner.os == 'Linux' && runner.arch == 'X64' && runner.environment == 'github-hosted' }}
-      uses: wimpysworld/nothing-but-nix@dd6ef566962bfa4656301706035da97ebbe90e9b # v9
+      uses: wimpysworld/nothing-but-nix@687c797a730352432950c707ab493fcc951818d7 # v10
       continue-on-error: true
       with:
         hatchet-protocol: holster
