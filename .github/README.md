@@ -33,6 +33,10 @@ options for [`actions/create-github-app-token`](https://github.com/actions/creat
 
 options for [`actions/checkout`](https://github.com/actions/checkout)
 
+### `github_token`
+
+options for [`cachix/install-nix-action`](https://github.com/cachix/install-nix-action)
+
 ### `niks3_url`, `niks3_token`, `audience`
 
 options for [`spotdemo4/niks3-action`](https://github.com/spotdemo4/niks3-action) to use a [niks3](https://github.com/Mic92/niks3) cache

@@ -26,6 +26,11 @@ inputs:
     description: "whether to fetch submodules"
     default: "false"
 
+  # nix
+  github_token:
+    description: "github token for nix to use, useful for private repos and to increase rate limits"
+    default: ""
+
   # cache
   niks3_url:
     description: "URL of niks3 server"
@@ -91,7 +96,7 @@ runs:
     - uses: cachix/install-nix-action@19effe9fe722874e6d46dd7182e4b8b7a43c4a99 # v31.10.0
       with:
         nix_path: nixpkgs=flake:nixpkgs
-        github_access_token: ${{ steps.checkout.outputs.token || inputs.token }}
+        github_access_token: ${{ inputs.github_token || steps.checkout.outputs.token || (steps.checkout.outputs.platform == 'github' && inputs.token) }}
         extra_nix_config: |
           accept-flake-config = true
           download-buffer-size = 524288000
