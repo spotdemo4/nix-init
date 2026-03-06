@@ -23,7 +23,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Initialize
-        uses: spotdemo4/nix-init@main
+        uses: ./
 
       - name: Run checks
         run: nix flake check
