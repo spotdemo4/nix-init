@@ -29,7 +29,7 @@ it usually runs in < 1 minute, and works with self-hosted/gitea/forgejo action r
 
 options for [`actions/create-github-app-token`](https://github.com/actions/create-github-app-token)
 
-### `token`, `ref`, `fetch_depth`, `submodules`
+### `token`, `ref`, `fetch_depth`, `submodules`, `path`
 
 options for [`actions/checkout`](https://github.com/actions/checkout)
 
