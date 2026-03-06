@@ -33,7 +33,7 @@ options for [`actions/create-github-app-token`](https://github.com/actions/creat
 
 options for [`actions/checkout`](https://github.com/actions/checkout)
 
-### `github_token`
+### `github_token`, `config`
 
 options for [`cachix/install-nix-action`](https://github.com/cachix/install-nix-action)
 
@@ -93,3 +93,7 @@ the email from the token, used for git operations
 ### `system`
 
 the nix system platform (eg. `x86_64-linux`)
+
+### `version`
+
+the nix version

@@ -17,6 +17,19 @@
   "nix": {
     "enabled": true
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "nix version",
+      "depNameTemplate": "NixOS/nix",
+      "datasourceTemplate": "github-tags",
+      "managerFilePatterns": ["/^action.yaml$/"],
+      "matchStrings": [
+        "https://releases.nixos.org/nix/nix-(?<currentValue>.+)/install"
+      ],
+      "autoReplaceStringTemplate": "https://releases.nixos.org/nix/nix-{{{newValue}}}/install"
+    }
+  ],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
