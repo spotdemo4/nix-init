@@ -122,7 +122,7 @@ runs:
         echo "version=${VERSION}" >> $GITHUB_OUTPUT
         echo "Nix version: ${VERSION}"
 
-        if NIXPKGS=$(nix eval --raw --inputs-from . 'nixpkgs#path'); then
+        if NIXPKGS=$(nix eval --raw --inputs-from . 'nixpkgs#path') &> /dev/null; then
           echo "NIX_PATH=nixpkgs=${NIXPKGS}" >> $GITHUB_ENV
           echo "Nixpkgs: ${NIXPKGS}"
         fi
