@@ -103,7 +103,6 @@ runs:
     - uses: cachix/install-nix-action@19effe9fe722874e6d46dd7182e4b8b7a43c4a99 # v31.10.0
       with:
         install_url: https://releases.nixos.org/nix/nix-2.34.1/install
-        nix_path: nixpkgs=flake:nixpkgs
         github_access_token: ${{ inputs.github_token || steps.checkout.outputs.token || (steps.checkout.outputs.platform == 'github' && inputs.token) }}
         extra_nix_config: |
           accept-flake-config = true
@@ -122,6 +121,11 @@ runs:
         VERSION=$(nix --version)
         echo "version=${VERSION}" >> $GITHUB_OUTPUT
         echo "Nix version: ${VERSION}"
+
+        if NIXPKGS=$(nix eval --raw --inputs-from . 'nixpkgs#path'); then
+          echo "NIX_PATH=nixpkgs=${NIXPKGS}" >> $GITHUB_ENV
+          echo "Nixpkgs: ${NIXPKGS}"
+        fi
 
         absolute_action_path=$(realpath "${{ github.action_path }}")
         if NIX_CONFIG=$(nix eval --raw --file flake.nix nixConfig --apply "import ${absolute_action_path}/kv.nix") &> /dev/null; then
