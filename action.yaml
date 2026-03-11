@@ -124,7 +124,7 @@ runs:
 
         if NIXPKGS=$(nix eval --raw --inputs-from . 'nixpkgs#path' 2> /dev/null); then
           echo "NIX_PATH=nixpkgs=${NIXPKGS}" >> $GITHUB_ENV
-          echo "Nixpkgs: ${NIXPKGS}"
+          echo "Nix pkgs: ${NIXPKGS}"
         fi
 
         absolute_action_path=$(realpath "${{ github.action_path }}")
