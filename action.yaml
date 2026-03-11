@@ -122,13 +122,13 @@ runs:
         echo "version=${VERSION}" >> $GITHUB_OUTPUT
         echo "Nix version: ${VERSION}"
 
-        if NIXPKGS=$(nix eval --raw --inputs-from . 'nixpkgs#path') &> /dev/null; then
+        if NIXPKGS=$(nix eval --raw --inputs-from . 'nixpkgs#path' 2> /dev/null); then
           echo "NIX_PATH=nixpkgs=${NIXPKGS}" >> $GITHUB_ENV
           echo "Nixpkgs: ${NIXPKGS}"
         fi
 
         absolute_action_path=$(realpath "${{ github.action_path }}")
-        if NIX_CONFIG=$(nix eval --raw --file flake.nix nixConfig --apply "import ${absolute_action_path}/kv.nix") &> /dev/null; then
+        if NIX_CONFIG=$(nix eval --raw --file flake.nix nixConfig --apply "import ${absolute_action_path}/kv.nix" 2> /dev/null); then
           CONFIG=$(mktemp -p "${{ runner.temp }}")
           echo "${NIX_CONFIG}" > "${CONFIG}"
           echo "NIX_USER_CONF_FILES=${CONFIG}" >> $GITHUB_ENV
