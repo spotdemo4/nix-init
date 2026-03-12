@@ -112,7 +112,7 @@ runs:
     - id: nix
       shell: bash
       run: |
-        # Set nix config
+        : Setting up nix
 
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')
         echo "system=${SYSTEM}" >> $GITHUB_OUTPUT
@@ -122,20 +122,22 @@ runs:
         echo "version=${VERSION}" >> $GITHUB_OUTPUT
         echo "Nix version: ${VERSION}"
 
-        if NIXPKGS=$(nix eval --raw --inputs-from . 'nixpkgs#path' 2> /dev/null); then
-          echo "NIX_PATH=nixpkgs=${NIXPKGS}" >> $GITHUB_ENV
-          echo "Nix pkgs: ${NIXPKGS}"
-        fi
-
+        echo "::group::Setting nix config"
         absolute_action_path=$(realpath "${{ github.action_path }}")
-        if NIX_CONFIG=$(nix eval --raw --file flake.nix nixConfig --apply "import ${absolute_action_path}/kv.nix" 2> /dev/null); then
+        if NIX_CONFIG=$(nix eval --raw --file flake.nix nixConfig --apply "import ${absolute_action_path}/kv.nix"); then
           CONFIG=$(mktemp -p "${{ runner.temp }}")
           echo "${NIX_CONFIG}" > "${CONFIG}"
           echo "NIX_USER_CONF_FILES=${CONFIG}" >> $GITHUB_ENV
-          echo "::group::Set nix config"
           echo "${NIX_CONFIG}"
-          echo "::endgroup::"
         fi
+        echo "::endgroup::"
+
+        echo "::group::Setting nix path"
+        if NIXPKGS=$(nix eval --raw --inputs-from . 'nixpkgs#path'); then
+          echo "NIX_PATH=nixpkgs=${NIXPKGS}" >> $GITHUB_ENV
+          echo "${NIXPKGS}"
+        fi
+        echo "::endgroup::"
 
     # cache setup
 
