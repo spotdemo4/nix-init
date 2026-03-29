@@ -68,7 +68,7 @@
           };
         };
 
-        checks = pkgs.lib.mkChecks {
+        checks = pkgs.mkChecks {
           actions = {
             root = ./.;
             filter = file: file.hasExt "yaml";
