@@ -22,22 +22,11 @@
 
   outputs =
     {
-      nixpkgs,
       trev,
       ...
     }:
     trev.libs.mkFlake (
-      system:
-      let
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [
-            trev.overlays.packages
-            trev.overlays.libs
-          ];
-        };
-      in
-      {
+      system: pkgs: {
         devShells = {
           default = pkgs.mkShell {
             shellHook = pkgs.shellhook.ref;
@@ -73,11 +62,8 @@
 
           vulnerable = pkgs.mkShell {
             packages = with pkgs; [
-              # flake
-              flake-checker
-
-              # actions
-              octoscan
+              flake-checker # flake
+              octoscan # actions
             ];
           };
         };
@@ -130,6 +116,7 @@
           };
         };
 
+        schemas = trev.schemas;
         formatter = pkgs.nixfmt-tree;
       }
     );
