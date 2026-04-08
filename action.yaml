@@ -102,7 +102,7 @@ runs:
 
     - uses: cachix/install-nix-action@96951a368ba55167b55f1c916f7d416bac6505fe # v31.10.3
       with:
-        install_url: https://releases.nixos.org/nix/nix-2.34.4/install
+        install_url: https://releases.nixos.org/nix/nix-2.34.5/install
         github_access_token: ${{ inputs.github_token || steps.checkout.outputs.token || (steps.checkout.outputs.platform == 'github' && inputs.token) }}
         extra_nix_config: |
           accept-flake-config = true
