@@ -80,7 +80,7 @@ runs:
     # checkout
 
     - id: checkout
-      uses: spotdemo4/better-checkout@347527b6a5b1c1dba59ad3b66f68b9b0835cb740 # v0.8.0
+      uses: spotdemo4/better-checkout@a08be04e9f594479a4ac25b1a67d707190dd619e # v0.10.0
       with:
         token: ${{ inputs.token }}
         app-id: ${{ inputs.app_id }}
