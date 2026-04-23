@@ -100,7 +100,7 @@ runs:
         root-safe-haven: "5120"
         mnt-safe-haven: "5120"
 
-    - uses: cachix/install-nix-action@616559265b40713947b9c190a8ff4b507b5df49b # v31.10.4
+    - uses: cachix/install-nix-action@ab739621df7a23f52766f9ccc97f38da6b7af14f # v31.10.5
       with:
         install_url: https://releases.nixos.org/nix/nix-2.34.6/install
         github_access_token: ${{ inputs.github_token || steps.checkout.outputs.token || (steps.checkout.outputs.platform == 'github' && inputs.token) }}
