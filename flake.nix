@@ -63,7 +63,7 @@
           vulnerable = pkgs.mkShell {
             packages = with pkgs; [
               flake-checker # flake
-              octoscan # actions
+              zizmor # actions
             ];
           };
         };
@@ -74,11 +74,11 @@
             filter = file: file.hasExt "yaml";
             deps = with pkgs; [
               action-validator
-              octoscan
+              zizmor
             ];
             forEach = ''
               action-validator "$file"
-              octoscan scan "$file"
+              zizmor --offline "$file"
             '';
           };
 
@@ -116,8 +116,16 @@
           };
         };
 
+        formatter = pkgs.treefmt.withConfig {
+          configFile = ./treefmt.toml;
+          runtimeInputs = with pkgs; [
+            nixfmt
+            tombi
+            prettier
+          ];
+        };
+
         schemas = trev.schemas;
-        formatter = pkgs.nixfmt-tree;
       }
     );
 }

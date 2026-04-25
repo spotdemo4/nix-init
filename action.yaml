@@ -111,7 +111,7 @@ runs:
 
     - id: nix
       shell: bash
-      run: |
+      run: | # zizmor: ignore[github-env]
         : Setting up nix
 
         SYSTEM=$(nix eval --impure --raw --expr 'builtins.currentSystem')

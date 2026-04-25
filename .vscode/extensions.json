@@ -1,3 +1,7 @@
 {
-  "recommendations": ["jnoortheen.nix-ide", "esbenp.prettier-vscode"]
+  "recommendations": [
+    "jnoortheen.nix-ide",
+    "tombi-toml.tombi",
+    "esbenp.prettier-vscode"
+  ]
 }

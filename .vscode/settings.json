@@ -13,11 +13,16 @@
     "editor.defaultFormatter": "jnoortheen.nix-ide"
   },
 
+  // toml
+  "[toml]": {
+    "editor.defaultFormatter": "tombi-toml.tombi"
+  },
+
   // json
   "json.schemaDownload.trustedDomains": {
     "https://docs.renovatebot.com/": true
   },
 
-  // actions
+  // default
   "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
