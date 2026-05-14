@@ -2,11 +2,11 @@
   "nodes": {
     "nixpkgs": {
       "locked": {
-        "lastModified": 1777641297,
-        "narHash": "sha256-WNGcmeOZ8Tr9dq6ztCspYbzWFswr2mPebM9LpsfGxPk=",
+        "lastModified": 1778672786,
+        "narHash": "sha256-Blg88K1jwG+P0Mr27+rKMFCufdrWkV3wWh9AdYtz0FQ=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "c6d65881c5624c9cae5ea6cedef24699b0c0a4c0",
+        "rev": "eef00dfd8a712b34af845f9350bac681b1228bd1",
         "type": "github"
       },
       "original": {
@@ -20,7 +20,7 @@
       "inputs": {
         "nixpkgs": "nixpkgs",
         "systems": "systems",
-        "trev": "trev"
+        "trevpkgs": "trevpkgs"
       }
     },
     "schema": {
@@ -53,7 +53,7 @@
         "type": "github"
       }
     },
-    "trev": {
+    "trevpkgs": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -64,16 +64,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1777715302,
-        "narHash": "sha256-n49llOndz6MJC+7Xgel2nUXs1HXbInC2vdBeseeQHno=",
+        "lastModified": 1778667655,
+        "narHash": "sha256-cS+grLAQh6u/dXcYDGfulxisI3IB6A8T/Nigk04bA9Q=",
         "owner": "spotdemo4",
-        "repo": "nur",
-        "rev": "8d27f7c901b1d61d48ba869264f5cc0c7763e5f2",
+        "repo": "trevpkgs",
+        "rev": "275caccc18943eaaef63d7d73772f3536776e416",
         "type": "github"
       },
       "original": {
         "owner": "spotdemo4",
-        "repo": "nur",
+        "repo": "trevpkgs",
         "type": "github"
       }
     }
