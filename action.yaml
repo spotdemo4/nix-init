@@ -37,6 +37,7 @@ inputs:
   # cache
   niks3_url:
     description: "URL of niks3 server"
+    default: "${{ github.repository_owner == 'spotdemo4' && 'https://niks3.trev.zip' || '' }}"
 
   # shell
   shell:
