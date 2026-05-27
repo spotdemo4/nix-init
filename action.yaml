@@ -127,13 +127,6 @@ runs:
         fi
         echo "::endgroup::"
 
-        echo "::group::Setting nix path"
-        if NIXPKGS=$(nix eval --raw --inputs-from . 'nixpkgs#path'); then
-          echo "NIX_PATH=nixpkgs=${NIXPKGS}" >> $GITHUB_ENV
-          echo "${NIXPKGS}"
-        fi
-        echo "::endgroup::"
-
     # cache setup
 
     - if: ${{ inputs.niks3_url != '' }}
