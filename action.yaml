@@ -37,12 +37,6 @@ inputs:
   # cache
   niks3_url:
     description: "URL of niks3 server"
-    default: "https://niks3.trev.zip/"
-  niks3_token:
-    description: "authentication token"
-  audience:
-    description: "audience for OIDC authentication"
-    default: "${{ github.repository_owner == 'spotdemo4' && 'https://niks3.trev.zip' || '' }}"
 
   # shell
   shell:
@@ -142,13 +136,11 @@ runs:
 
     # cache setup
 
-    - if: ${{ ( inputs.niks3_url != '' && inputs.niks3_token != '' ) || inputs.audience != '' }}
-      uses: spotdemo4/niks3-action@6c9d4101744b114cc5b5de376fdd2e3a6ce916e2 # v0.3.2
+    - if: ${{ inputs.niks3_url != '' }}
+      uses: spotdemo4/mic92-niks3-action@6b6ac7ff2e03da50b4d35e5858dbb2f775beff32 # main
       continue-on-error: true
       with:
         server-url: ${{ inputs.niks3_url }}
-        auth-token: ${{ inputs.niks3_token }}
-        audience: ${{ inputs.audience }}
 
     # shell setup
 

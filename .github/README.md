@@ -37,9 +37,9 @@ options for [`actions/checkout`](https://github.com/actions/checkout)
 
 options for [`cachix/install-nix-action`](https://github.com/cachix/install-nix-action)
 
-### `niks3_url`, `niks3_token`, `audience`
+### `niks3_url`
 
-options for [`spotdemo4/niks3-action`](https://github.com/spotdemo4/niks3-action) to use a [niks3](https://github.com/Mic92/niks3) cache
+server url for [`Mic92/niks3-action`](https://github.com/Mic92/niks3-action) to use a [niks3](https://github.com/Mic92/niks3) cache
 
 ### `shell`
 
