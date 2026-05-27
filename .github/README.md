@@ -11,7 +11,7 @@ composite action to initialize nix-based repos. Got tired of writing basically t
 - setup optimal nix environment ([`wimpysworld/nothing-but-nix`](https://github.com/wimpysworld/nothing-but-nix))
 - install nix ([`cachix/install-nix-action`](https://github.com/cachix/install-nix-action))
 - set nix config equal to `nixConfig` in flake
-- setup caching ([`spotdemo4/niks3-action`](https://github.com/spotdemo4/niks3-action)) (optional)
+- setup caching ([`Mic92/niks3-action`](https://github.com/Mic92/niks3-action)) (optional)
 - use environment from flake ([`nicknovitski/nix-develop`](https://github.com/nicknovitski/nix-develop)) (optional)
 
 it usually runs in < 1 minute, and works with self-hosted/gitea/forgejo action runners
