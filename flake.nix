@@ -31,6 +31,10 @@
           default = pkgs.mkShell {
             shellHook = pkgs.shellhook.ref;
             packages = with pkgs; [
+              # lint
+              nil
+              nixd
+
               # format
               nixfmt
               prettier
