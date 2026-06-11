@@ -131,7 +131,7 @@ runs:
     # cache setup
 
     - if: ${{ inputs.niks3_url != '' }}
-      uses: spotdemo4/mic92-niks3-action@42d58b046f09ed72668fd785df09e58269992e8d # forgejo
+      uses: spotdemo4/mic92-niks3-action@efa0cb86ec38316b5b0ac573f38ad4c6d2193ed0 # forgejo
       continue-on-error: true
       with:
         server-url: ${{ inputs.niks3_url }}
