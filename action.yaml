@@ -118,13 +118,28 @@ runs:
         echo "version=${VERSION}" >> $GITHUB_OUTPUT
         echo "Nix version: ${VERSION}"
 
-        echo "::group::Setting nix config"
+        NIX_USER_CONF_FILE=$(mktemp -p "${{ runner.temp }}")
         absolute_action_path=$(realpath "${{ github.action_path }}")
+
+        echo "::group::Setting nix path"
+        if NIXPKGS_REGISTRY=$(nix eval --impure --json --file "${absolute_action_path}/nixpkgs-registry.nix" --apply 'registry: registry { lockFile = ./flake.lock; }'); then
+          NIXPKGS_REGISTRY_FILE=$(mktemp -p "${{ runner.temp }}")
+          echo "${NIXPKGS_REGISTRY}" > "${NIXPKGS_REGISTRY_FILE}"
+          echo "flake-registry = ${NIXPKGS_REGISTRY_FILE}" >> "${NIX_USER_CONF_FILE}"
+
+          NIX_PATH="nixpkgs=flake:nix-init-nixpkgs"
+          echo "NIX_PATH=${NIX_PATH}" >> $GITHUB_ENV
+          echo "${NIX_PATH}"
+        fi
+        echo "::endgroup::"
+
+        echo "::group::Setting nix config"
         if NIX_CONFIG=$(nix eval --raw --file flake.nix nixConfig --apply "import ${absolute_action_path}/kv.nix"); then
-          CONFIG=$(mktemp -p "${{ runner.temp }}")
-          echo "${NIX_CONFIG}" > "${CONFIG}"
-          echo "NIX_USER_CONF_FILES=${CONFIG}" >> $GITHUB_ENV
+          echo "${NIX_CONFIG}" >> "${NIX_USER_CONF_FILE}"
           echo "${NIX_CONFIG}"
+        fi
+        if [[ -s "${NIX_USER_CONF_FILE}" ]]; then
+          echo "NIX_USER_CONF_FILES=${NIX_USER_CONF_FILE}" >> $GITHUB_ENV
         fi
         echo "::endgroup::"
 
