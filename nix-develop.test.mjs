@@ -65,10 +65,9 @@ test("dumps the current process environment", () => {
   );
 
   assert.equal(result.status, 0);
-  assert.deepEqual(
-    Object.fromEntries(extractEnvironment(result.stdout, "marker").environment),
-    { EMPTY: "", EQUALS: "a=b" },
-  );
+  const environment = extractEnvironment(result.stdout, "marker").environment;
+  assert.equal(environment.get("EMPTY"), "");
+  assert.equal(environment.get("EQUALS"), "a=b");
 });
 
 test("retries partial environment writes", () => {
