@@ -52,6 +52,19 @@
             ];
           };
 
+          check = pkgs.mkShell {
+            packages = with pkgs; [
+              hello
+            ];
+            NIX_INIT_EMPTY = "";
+            NIX_INIT_MULTILINE = "first\nsecond";
+            shellHook = ''
+              trap 'printf "nix-init shell cleanup\n"' EXIT
+              export NIX_INIT_SHELL_HOOK=loaded
+              printf 'nix-init shell hook output\n'
+            '';
+          };
+
           release = pkgs.mkShell {
             packages = with pkgs; [
               flake-release

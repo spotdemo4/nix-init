@@ -29,6 +29,16 @@ jobs:
 
       - name: Initialize
         uses: ./
+        with:
+          shell: check
+
+      - name: Check development shell
+        run: |
+          hello
+          test "${NIX_INIT_EMPTY+x}" = x
+          test -z "${NIX_INIT_EMPTY}"
+          test "${NIX_INIT_SHELL_HOOK}" = loaded
+          test "${NIX_INIT_MULTILINE}" = $'first\nsecond'
 
       - name: Run checks
         run: nix flake check
