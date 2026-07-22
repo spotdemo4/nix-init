@@ -158,8 +158,11 @@ runs:
       env:
         NIX_DEVELOP_TARGET: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
       run: |
+        : Loading development shell
+
         if ! command -v node >/dev/null; then
           echo "::error::Node.js is required to load a development shell"
           exit 1
         fi
+
         node "${{ github.action_path }}/nix-develop.mjs" "$NIX_DEVELOP_TARGET"
