@@ -14,7 +14,7 @@ composite action to initialize nix-based repos. Got tired of writing basically t
 - setup caching ([`Mic92/niks3-action`](https://github.com/Mic92/niks3-action)) (optional)
 - use environment from flake (optional)
 
-it usually runs in < 1 minute, and works with self-hosted/gitea/forgejo action runners
+it usually runs in < 1 minute, and works with self-hosted/gitea/forgejo action runners. Node.js 20 or newer must be available on `PATH`.
 
 ## Usage
 

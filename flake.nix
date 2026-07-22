@@ -123,7 +123,7 @@
 
           prettier = {
             root = ./.;
-            filter = file: file.hasExt "yaml" || file.hasExt "json" || file.hasExt "md";
+            filter = file: file.hasExt "yaml" || file.hasExt "json" || file.hasExt "md" || file.hasExt "mjs";
             packages = with pkgs; [
               prettier
             ];

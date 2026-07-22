@@ -12,4 +12,4 @@ includes = ["*.toml"]
 [formatter.prettier]
 command = "prettier"
 options = ["--write"]
-includes = ["*.yaml", "*.json", "*.md"]
+includes = ["*.yaml", "*.json", "*.md", "*.mjs"]

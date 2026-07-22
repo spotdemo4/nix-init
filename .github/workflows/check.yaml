@@ -27,6 +27,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Test development shell exporter
+        run: node --test nix-develop.test.mjs
+
       - name: Initialize
         uses: ./
         with:
@@ -34,6 +37,7 @@ jobs:
 
       - name: Check development shell
         run: |
+          set -x
           hello
           test "${NIX_INIT_EMPTY+x}" = x
           test -z "${NIX_INIT_EMPTY}"
