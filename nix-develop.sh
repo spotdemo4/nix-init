@@ -51,7 +51,7 @@ while IFS='=' read -r -d '' name value; do
 		continue
 	fi
 
-	if declare -p "$name" &>/dev/null && [[ "${!name}" == "$value" ]]; then
+	if [[ "${!name+x}" == x ]] && [[ "${!name}" == "$value" ]]; then
 		continue
 	fi
 
