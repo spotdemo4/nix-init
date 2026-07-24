@@ -7,6 +7,7 @@ import {
   buildFileCommands,
   EnvironmentCollector,
   extractEnvironment,
+  resolveArguments,
   writeAll,
 } from "./nix-develop.mjs";
 
@@ -81,12 +82,31 @@ test("retries partial environment writes", () => {
   assert.equal(Buffer.concat(chunks).toString(), "environment");
 });
 
+test("resolves command-line and action targets", () => {
+  assert.deepEqual(resolveArguments([".#cli"], { INPUT_TARGET: ".#action" }), [
+    ".#cli",
+  ]);
+  assert.deepEqual(
+    resolveArguments([], {
+      GITHUB_ACTIONS: "true",
+      INPUT_TARGET: ".#action",
+    }),
+    [".#action"],
+  );
+  assert.deepEqual(resolveArguments([], {}), ["./#default"]);
+  assert.throws(
+    () => resolveArguments([], { GITHUB_ACTIONS: "true" }),
+    /target input is required/,
+  );
+});
+
 test("builds ordered PATH and environment file commands", () => {
   const environment = new Map([
     ["PATH", "/nix/first:/nix/second:/usr/bin:/nix/first:/missing"],
     ["UNCHANGED", "same"],
     ["EMPTY", ""],
     ["MULTILINE", "first\nsecond"],
+    ["CARRIAGE", "first\rsecond"],
     ["INVALID-NAME", "ignored"],
   ]);
   const commands = buildFileCommands(
@@ -102,7 +122,7 @@ test("builds ordered PATH and environment file commands", () => {
   assert.equal(commands.pathFile, "/nix/second\n/nix/first\n");
   assert.equal(
     commands.environmentFile,
-    "EMPTY=\nMULTILINE<<nix_develop_uuid\nfirst\nsecond\nnix_develop_uuid\n",
+    "EMPTY=\nMULTILINE<<nix_develop_uuid\nfirst\nsecond\nnix_develop_uuid\nCARRIAGE<<nix_develop_uuid\nfirst\rsecond\nnix_develop_uuid\n",
   );
 });
 

@@ -150,7 +150,7 @@ export function buildFileCommands(
     }
 
     environmentEntries.push(
-      value.includes("\n")
+      value.includes("\n") || value.includes("\r")
         ? multilineEntry(name, value, uuid)
         : `${name}=${value}\n`,
     );
@@ -264,21 +264,23 @@ export function runNixDevelop(arguments_, marker, options = {}) {
   });
 }
 
-export async function main(
-  arguments_ = process.env.INPUT_TARGET
-    ? [process.env.INPUT_TARGET]
-    : process.argv.slice(2),
-) {
+export function resolveArguments(arguments_, environment = process.env) {
+  if (arguments_.length !== 0) return arguments_;
+  if (environment.INPUT_TARGET) return [environment.INPUT_TARGET];
+  if (environment.GITHUB_ACTIONS === "true") {
+    throw new Error("target input is required");
+  }
+  return ["./#default"];
+}
+
+export async function main(arguments_ = process.argv.slice(2)) {
   const nodeMajor = Number.parseInt(process.versions.node, 10);
   if (nodeMajor < 20) {
     throw new Error("Node.js 20 or newer is required");
   }
 
   const marker = `nix-develop-${randomUUID()}`;
-  const result = await runNixDevelop(
-    arguments_.length === 0 ? ["./#default"] : arguments_,
-    marker,
-  );
+  const result = await runNixDevelop(resolveArguments(arguments_), marker);
 
   if (result.streamError) {
     throw result.streamError;
