@@ -72,6 +72,14 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - id: shell_input
+      shell: bash
+      env:
+        SHELL_INPUT: ${{ inputs.shell }}
+      run: |
+        : Capturing shell input
+        printf 'shell=%s\n' "${SHELL_INPUT}" >> "${GITHUB_OUTPUT}"
+
     # checkout
 
     - id: checkout
@@ -153,10 +161,10 @@ runs:
 
     # shell setup
 
-    - if: ${{ inputs.shell != '' }}
+    - if: ${{ steps.shell_input.outputs.shell != '' }}
       shell: bash
       env:
-        NIX_DEVELOP_TARGET: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
+        NIX_DEVELOP_TARGET: ".#devShells.${{ steps.nix.outputs.system }}.${{ steps.shell_input.outputs.shell }}"
       run: |
         : Loading development shell
 
