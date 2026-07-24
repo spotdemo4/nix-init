@@ -32,6 +32,12 @@
   ],
   "packageRules": [
     {
+      "matchManagers": ["github-actions"],
+      "matchDepNames": ["spotdemo4/nix-init"],
+      "matchFileNames": ["action.yaml"],
+      "enabled": false
+    },
+    {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
     },

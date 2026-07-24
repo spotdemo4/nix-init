@@ -72,14 +72,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - id: shell_input
-      shell: bash
-      env:
-        SHELL_INPUT: ${{ inputs.shell }}
-      run: |
-        : Capturing shell input
-        printf 'shell=%s\n' "${SHELL_INPUT}" >> "${GITHUB_OUTPUT}"
-
     # checkout
 
     - id: checkout
@@ -161,16 +153,7 @@ runs:
 
     # shell setup
 
-    - if: ${{ steps.shell_input.outputs.shell != '' }}
-      shell: bash
-      env:
-        NIX_DEVELOP_TARGET: ".#devShells.${{ steps.nix.outputs.system }}.${{ steps.shell_input.outputs.shell }}"
-      run: |
-        : Loading development shell
-
-        if ! command -v node >/dev/null; then
-          echo "::error::Node.js is required to load a development shell"
-          exit 1
-        fi
-
-        node "${{ github.action_path }}/nix-develop.mjs" "$NIX_DEVELOP_TARGET"
+    - if: ${{ inputs.shell != '' }}
+      uses: spotdemo4/nix-init/nix-develop@385242aeedcfe81e63952f5e589d467cbfaf5d37
+      with:
+        target: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
