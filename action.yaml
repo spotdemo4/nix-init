@@ -154,6 +154,6 @@ runs:
     # shell setup
 
     - if: ${{ inputs.shell != '' }}
-      uses: spotdemo4/nix-init/nix-develop@385242aeedcfe81e63952f5e589d467cbfaf5d37
+      uses: spotdemo4/nix-init/nix-develop@c3672d5aef98aa336b341a6202219a31ee9f8b1a
       with:
         target: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
