@@ -264,7 +264,11 @@ export function runNixDevelop(arguments_, marker, options = {}) {
   });
 }
 
-export async function main(arguments_ = process.argv.slice(2)) {
+export async function main(
+  arguments_ = process.env.INPUT_TARGET
+    ? [process.env.INPUT_TARGET]
+    : process.argv.slice(2),
+) {
   const nodeMajor = Number.parseInt(process.versions.node, 10);
   if (nodeMajor < 20) {
     throw new Error("Node.js 20 or newer is required");

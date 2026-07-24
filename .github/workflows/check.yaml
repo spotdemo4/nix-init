@@ -28,7 +28,7 @@ jobs:
           persist-credentials: false
 
       - name: Test development shell exporter
-        run: node --test nix-develop.test.mjs
+        run: node --test nix-develop/nix-develop.test.mjs
 
       - name: Initialize
         uses: ./

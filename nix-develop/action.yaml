@@ -1,0 +1,11 @@
+name: nix develop
+description: load a nix development shell into the workflow environment
+
+inputs:
+  target:
+    description: development shell installable
+    required: true
+
+runs:
+  using: node24
+  main: nix-develop.mjs
