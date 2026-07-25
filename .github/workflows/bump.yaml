@@ -27,7 +27,7 @@ jobs:
     steps:
       - id: init
         name: Initialize
-        uses: spotdemo4/nix-init@c0437e8d7de78564b4c3a1db710f43ce407e509b # v1.59.0
+        uses: spotdemo4/nix-init@7b3c73a036788c813cef96f63cd32e622ba616f0 # v1.61.0
         with:
           app_id: ${{ vars.CLIENT_ID }}
           app_key: ${{ secrets.PRIVATE_KEY }}
