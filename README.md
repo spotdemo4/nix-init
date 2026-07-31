@@ -22,14 +22,14 @@ it usually runs in < 1 minute, and works with self-hosted/gitea/forgejo action r
 
 ```yaml
 - name: Initialize
-  uses: llc/nix-init@v1.62.1
+  uses: llc/nix-init@v1.63.0
 ```
 
 ### GitHub
 
 ```yaml
 - name: Initialize
-  uses: spotdemo4/nix-init@v1.62.1
+  uses: spotdemo4/nix-init@v1.63.0
 ```
 
 ## Inputs
@@ -65,7 +65,7 @@ devShells.x86_64-linux.ci = pkgs.mkShell {
 
 ```yaml
 - name: Initialize
-  uses: llc/nix-init@v1.62.1
+  uses: llc/nix-init@v1.63.0
   with:
     shell: ci
 
