@@ -3,8 +3,6 @@
 [![check](https://trev.zip/llc/nix-init/actions/workflows/check.yaml/badge.svg?branch=main&logo=forgejo&logoColor=%23bac2de&label=check&labelColor=%23313244)](https://trev.zip/llc/nix-init/actions?workflow=check.yaml)
 [![vulnerable](https://trev.zip/llc/nix-init/actions/workflows/vulnerable.yaml/badge.svg?branch=main&logo=forgejo&logoColor=%23bac2de&label=vulnerable&labelColor=%23313244)](https://trev.zip/llc/nix-init/actions?workflow=vulnerable.yaml)
 
-Forgejo is the canonical repository for updates and releases. The [GitHub mirror](https://github.com/spotdemo4/nix-init) is synchronized separately.
-
 composite action to initialize nix-based repos. Got tired of writing basically the same few steps for every job so this does all the important stuff in one:
 
 - create a github app token ([`actions/create-github-app-token`](https://github.com/actions/create-github-app-token)) (optional)
