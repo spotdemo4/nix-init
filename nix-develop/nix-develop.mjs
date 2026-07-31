@@ -2,9 +2,9 @@
 
 import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
-import { appendFileSync, statSync, writeSync } from "node:fs";
+import { appendFileSync, realpathSync, statSync, writeSync } from "node:fs";
 import { delimiter as pathDelimiter } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 
 const maxEnvironmentBytes = 64 * 1024 * 1024;
 const signalExitCodes = { SIGINT: 130, SIGTERM: 143 };
@@ -311,7 +311,7 @@ export async function main(arguments_ = process.argv.slice(2)) {
 
 if (
   process.argv[1] &&
-  import.meta.url === pathToFileURL(process.argv[1]).href
+  realpathSync(fileURLToPath(import.meta.url)) === realpathSync(process.argv[1])
 ) {
   if (process.argv[2] === "--dump-environment") {
     dumpEnvironment(process.argv[3]);

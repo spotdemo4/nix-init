@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { mkdtempSync, rmSync, symlinkSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
@@ -69,6 +72,23 @@ test("dumps the current process environment", () => {
   const environment = extractEnvironment(result.stdout, "marker").environment;
   assert.equal(environment.get("EMPTY"), "");
   assert.equal(environment.get("EQUALS"), "a=b");
+});
+
+test("runs through a symlinked parent directory", (context) => {
+  const directory = mkdtempSync(join(tmpdir(), "nix-develop-"));
+  context.after(() => rmSync(directory, { force: true, recursive: true }));
+
+  const alias = join(directory, "action");
+  symlinkSync(fileURLToPath(new URL(".", import.meta.url)), alias, "dir");
+  const result = spawnSync(
+    process.execPath,
+    [join(alias, "nix-develop.mjs"), "--dump-environment", "marker"],
+    { env: { VALUE: "through-symlink" } },
+  );
+
+  assert.equal(result.status, 0);
+  const environment = extractEnvironment(result.stdout, "marker").environment;
+  assert.equal(environment.get("VALUE"), "through-symlink");
 });
 
 test("retries partial environment writes", () => {
