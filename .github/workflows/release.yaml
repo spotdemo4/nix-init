@@ -1,0 +1,32 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+concurrency:
+  group: release
+
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - id: init
+        name: Initialize
+        uses: spotdemo4/nix-init@3215144ef6367f915ece1867ff66e63ad92bd9f4 # v1.62.1
+        with:
+          app_id: ${{ vars.CLIENT_ID }}
+          app_key: ${{ secrets.PRIVATE_KEY }}
+          fetch_depth: 0
+          shell: release
+
+      - name: Release
+        run: flake-release
+        env:
+          GITHUB_TOKEN: ${{ steps.init.outputs.token }}
