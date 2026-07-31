@@ -42,6 +42,8 @@ inputs:
   # shell
   shell:
     description: "development shell to use from flake"
+  dev_shell:
+    description: "development shell to use from flake"
 
 outputs:
   platform:
@@ -153,7 +155,7 @@ runs:
 
     # shell setup
 
-    - if: ${{ inputs.shell != '' }}
+    - if: ${{ inputs.shell != '' || inputs.dev_shell != '' }}
       uses: spotdemo4/nix-init/nix-develop@c3672d5aef98aa336b341a6202219a31ee9f8b1a
       with:
-        target: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell }}"
+        target: ".#devShells.${{ steps.nix.outputs.system }}.${{ inputs.shell || inputs.dev_shell }}"
