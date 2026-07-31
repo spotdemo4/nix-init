@@ -1,0 +1,46 @@
+name: check
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+
+# yaml-language-server-disable is not allowed
+enable-openid-connect: true
+
+jobs:
+  check:
+    # zizmor: ignore[excessive-permissions]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Test development shell exporter
+        run: node --test nix-develop/nix-develop.test.mjs
+
+      - name: Initialize
+        uses: ./. # zizmor: ignore[unpinned-uses]
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          niks3_url: https://niks3.trev.zip
+          shell: check
+
+      - name: Check development shell
+        run: |
+          set -x
+          hello
+          test "${NIX_INIT_EMPTY+x}" = x
+          test -z "${NIX_INIT_EMPTY}"
+          test "${NIX_INIT_SHELL_HOOK}" = loaded
+          test "${NIX_INIT_MULTILINE}" = $'first\nsecond'
+
+      - name: Run checks
+        run: nix flake check

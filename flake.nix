@@ -86,8 +86,24 @@
         };
 
         checks = pkgs.mkChecks {
-          actions = {
+          action = {
             root = ./.;
+            files = [
+              ./action.yaml
+              ./nix-develop/action.yaml
+            ];
+            packages = with pkgs; [
+              action-validator
+              zizmor
+            ];
+            script = ''
+              action-validator "$file"
+              zizmor --offline "$file"
+            '';
+          };
+
+          actions-gh = {
+            root = ./.github/workflows;
             filter = file: file.hasExt "yaml";
             packages = with pkgs; [
               action-validator
@@ -99,9 +115,22 @@
             '';
           };
 
+          actions-fj = {
+            root = ./.forgejo/workflows;
+            filter = file: file.hasExt "yaml";
+            packages = with pkgs; [
+              forgejo-runner
+              zizmor
+            ];
+            script = ''
+              forgejo-runner validate --workflow --path "$file"
+              zizmor --offline "$file"
+            '';
+          };
+
           renovate = {
-            root = ./.github;
-            fileset = ./.github/renovate.json;
+            root = ./.forgejo;
+            fileset = ./.forgejo/renovate.json;
             packages = with pkgs; [
               renovate
             ];

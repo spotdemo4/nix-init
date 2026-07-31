@@ -1,7 +1,9 @@
 # nix init action
 
-[![check](https://github.com/spotdemo4/nix-init/actions/workflows/check.yaml/badge.svg?branch=main)](https://github.com/spotdemo4/nix-init/actions/workflows/check.yaml)
-[![vulnerable](https://github.com/spotdemo4/nix-init/actions/workflows/vulnerable.yaml/badge.svg?branch=main)](https://github.com/spotdemo4/nix-init/actions/workflows/vulnerable.yaml)
+[![check](https://trev.zip/llc/nix-init/actions/workflows/check.yaml/badge.svg?branch=main&logo=forgejo&logoColor=%23bac2de&label=check&labelColor=%23313244)](https://trev.zip/llc/nix-init/actions?workflow=check.yaml)
+[![vulnerable](https://trev.zip/llc/nix-init/actions/workflows/vulnerable.yaml/badge.svg?branch=main&logo=forgejo&logoColor=%23bac2de&label=vulnerable&labelColor=%23313244)](https://trev.zip/llc/nix-init/actions?workflow=vulnerable.yaml)
+
+Forgejo is the canonical repository for updates and releases. The [GitHub mirror](https://github.com/spotdemo4/nix-init) is synchronized separately.
 
 composite action to initialize nix-based repos. Got tired of writing basically the same few steps for every job so this does all the important stuff in one:
 
@@ -17,6 +19,15 @@ composite action to initialize nix-based repos. Got tired of writing basically t
 it usually runs in < 1 minute, and works with self-hosted/gitea/forgejo action runners.
 
 ## Usage
+
+### Forgejo
+
+```yaml
+- name: Initialize
+  uses: llc/nix-init@v1.62.1
+```
+
+### GitHub
 
 ```yaml
 - name: Initialize
@@ -56,7 +67,7 @@ devShells.x86_64-linux.ci = pkgs.mkShell {
 
 ```yaml
 - name: Initialize
-  uses: spotdemo4/nix-init@v1.62.1
+  uses: llc/nix-init@v1.62.1
   with:
     shell: ci
 

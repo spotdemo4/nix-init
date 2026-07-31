@@ -33,4 +33,4 @@ jobs:
           shell: vulnerable
 
       - name: Run zizmor
-        run: zizmor .github
+        run: zizmor .github .forgejo

@@ -4,8 +4,9 @@
   // self-hosted
   "onboarding": false,
   "requireConfig": "ignored",
-  "platform": "github",
-  "repositories": ["spotdemo4/nix-init"],
+  "platform": "forgejo",
+  "endpoint": "https://trev.zip/api/v1",
+  "repositories": ["llc/nix-init"],
 
   // repository
   "extends": ["config:recommended"],
@@ -47,8 +48,8 @@
     },
     {
       "matchManagers": ["github-actions"],
-      "matchFileNames": [".github/workflows/*.yaml"],
-      "groupName": "github actions"
+      "matchFileNames": [".forgejo/workflows/*.yaml"],
+      "groupName": "forgejo actions"
     },
     {
       "matchFileNames": ["**/action.yaml"],
