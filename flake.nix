@@ -11,7 +11,7 @@
   };
 
   inputs = {
-    systems.url = "github:nix-systems/default";
+    systems.url = "github:spotdemo4/systems";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     trevpkgs = {
       url = "github:spotdemo4/trevpkgs";
