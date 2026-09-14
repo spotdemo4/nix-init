@@ -27,7 +27,7 @@ jobs:
         run: node --test nix-develop/nix-develop.test.mjs
 
       - name: Initialize
-        uses: $/ # zizmor: ignore[unpinned-uses]
+        uses: ./. # zizmor: ignore[unpinned-uses]
         with:
           github_token: ${{ secrets.GH_TOKEN }}
           niks3_url: https://niks3.trev.zip
