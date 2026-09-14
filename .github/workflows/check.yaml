@@ -31,7 +31,7 @@ jobs:
         run: node --test nix-develop/nix-develop.test.mjs
 
       - name: Initialize
-        uses: ./
+        uses: $/
         with:
           shell: check
 
