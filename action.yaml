@@ -99,6 +99,7 @@ runs:
       with:
         install_url: https://releases.nixos.org/nix/nix-2.35.2/install
         github_access_token: ${{ inputs.github_token }}
+        enable_kvm: ${{ runner.environment == 'github-hosted' }}
         extra_nix_config: |
           build-dir = /nix/build
           accept-flake-config = true
