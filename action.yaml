@@ -97,7 +97,7 @@ runs:
 
     - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
       with:
-        install_url: https://releases.nixos.org/nix/nix-2.35.2/install
+        install_url: https://releases.nixos.org/nix/nix-2.35.3/install
         github_access_token: ${{ inputs.github_token }}
         enable_kvm: ${{ runner.environment == 'github-hosted' }}
         extra_nix_config: |
