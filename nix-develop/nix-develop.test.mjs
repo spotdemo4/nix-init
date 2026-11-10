@@ -44,9 +44,7 @@ test("rejects missing and incomplete environment fences", () => {
 
 test("streams hook output while retaining partial fences", () => {
   const shellOutput = [];
-  const collector = new EnvironmentCollector("marker", (chunk) =>
-    shellOutput.push(chunk),
-  );
+  const collector = new EnvironmentCollector("marker", (chunk) => shellOutput.push(chunk));
 
   collector.push(Buffer.from("hook output\nmar"));
   collector.push(Buffer.from("ker\0NAME=value\0"));
@@ -58,11 +56,7 @@ test("streams hook output while retaining partial fences", () => {
 test("dumps the current process environment", () => {
   const result = spawnSync(
     process.execPath,
-    [
-      fileURLToPath(new URL("nix-develop.mjs", import.meta.url)),
-      "--dump-environment",
-      "marker",
-    ],
+    [fileURLToPath(new URL("nix-develop.mjs", import.meta.url)), "--dump-environment", "marker"],
     {
       env: { EMPTY: "", EQUALS: "a=b" },
     },
@@ -103,9 +97,7 @@ test("retries partial environment writes", () => {
 });
 
 test("resolves command-line and action targets", () => {
-  assert.deepEqual(resolveArguments([".#cli"], { INPUT_TARGET: ".#action" }), [
-    ".#cli",
-  ]);
+  assert.deepEqual(resolveArguments([".#cli"], { INPUT_TARGET: ".#action" }), [".#cli"]);
   assert.deepEqual(
     resolveArguments([], {
       GITHUB_ACTIONS: "true",
@@ -114,10 +106,7 @@ test("resolves command-line and action targets", () => {
     [".#action"],
   );
   assert.deepEqual(resolveArguments([], {}), ["./#default"]);
-  assert.throws(
-    () => resolveArguments([], { GITHUB_ACTIONS: "true" }),
-    /target input is required/,
-  );
+  assert.throws(() => resolveArguments([], { GITHUB_ACTIONS: "true" }), /target input is required/);
 });
 
 test("builds ordered PATH and environment file commands", () => {

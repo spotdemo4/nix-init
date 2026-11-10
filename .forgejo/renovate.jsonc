@@ -10,13 +10,24 @@
 
   // repository
   "extends": ["config:recommended"],
+  "addLabels": ["dep"],
+  "prHourlyLimit": 0,
+  "nix": {
+    "enabled": true
+  },
+  // fix PRs for vulnerable direct dependencies, from osv.dev.
+  // transitive vulnerabilities are reported by the vulnerable workflow
+  "osvVulnerabilityAlerts": true,
+  "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
+  "vulnerabilityAlerts": {
+    "addLabels": ["security"],
+    "automerge": true
+  },
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true,
-    "schedule": ["* * * * 0"] // sunday
-  },
-  "nix": {
-    "enabled": true
+    "schedule": ["* * * * 0"], // sunday
+    "skipInstalls": false
   },
   "customManagers": [
     {
@@ -25,9 +36,7 @@
       "depNameTemplate": "NixOS/nix",
       "datasourceTemplate": "github-tags",
       "managerFilePatterns": ["/^action.yaml$/"],
-      "matchStrings": [
-        "https://releases.nixos.org/nix/nix-(?<currentValue>.+)/install"
-      ],
+      "matchStrings": ["https://releases.nixos.org/nix/nix-(?<currentValue>.+)/install"],
       "autoReplaceStringTemplate": "https://releases.nixos.org/nix/nix-{{{newValue}}}/install"
     }
   ],
@@ -44,7 +53,16 @@
     },
     {
       "matchManagers": ["nix"],
-      "groupName": "nix inputs"
+      "addLabels": ["nix"]
+    },
+    {
+      "matchManagers": ["nix"],
+      "matchUpdateTypes": ["digest"],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "addLabels": ["actions"]
     },
     {
       "matchManagers": ["github-actions"],

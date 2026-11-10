@@ -27,22 +27,28 @@
     }:
     trevpkgs.libs.mkFlake (
       system: pkgs: {
+
+        # nix develop [#...]
         devShells = {
           default = pkgs.mkShell {
             shellHook = pkgs.shellhook.ref;
             packages = with pkgs; [
-              # lint
-              nil
-              nixd
+              # node
+              nodejs_24
+              oxlint
 
-              # format
+              vscode-json-languageserver # json
+              yaml-language-server # yaml
+              tombi # toml
+              oxfmt # format
+
+              # nix
+              nixd
               nixfmt
-              prettier
 
               # util
+              treefmt
               bumper
-              flake-release
-              renovate
             ];
           };
 
@@ -79,13 +85,62 @@
 
           vulnerable = pkgs.mkShell {
             packages = with pkgs; [
-              flake-checker # flake
+              flake-checker # nix
               zizmor # actions
             ];
           };
         };
 
+        # nix fmt
+        formatter = pkgs.treefmt.withConfig {
+          configFile = ./treefmt.toml;
+          runtimeInputs = with pkgs; [
+            oxfmt
+            nixfmt
+          ];
+        };
+
+        # nix flake check
         checks = pkgs.mkChecks {
+          node-test = {
+            root = ./nix-develop;
+            filter = file: file.hasExt "mjs";
+            packages = with pkgs; [
+              nodejs_24
+            ];
+            script = ''
+              node --test nix-develop.test.mjs
+            '';
+          };
+
+          node-lint = {
+            root = ./.;
+            filter = file: file.hasExt "mjs";
+            include = [
+              ./.oxfmtrc.json
+              ./.oxlintrc.json
+            ];
+            packages = with pkgs; [
+              oxfmt
+              oxlint
+            ];
+            script = ''
+              oxfmt --check
+              oxlint --deny-warnings
+            '';
+          };
+
+          nix = {
+            root = ./.;
+            filter = file: file.hasExt "nix";
+            packages = with pkgs; [
+              nixfmt
+            ];
+            script = ''
+              nixfmt --check "$file"
+            '';
+          };
+
           action = {
             root = ./.;
             files = [
@@ -128,47 +183,34 @@
             '';
           };
 
-          renovate = {
+          renovate-fj = {
             root = ./.forgejo;
-            fileset = ./.forgejo/renovate.json;
+            files = ./.forgejo/renovate.jsonc;
             packages = with pkgs; [
               renovate
             ];
             script = ''
-              renovate-config-validator renovate.json
+              renovate-config-validator renovate.jsonc
             '';
           };
 
-          nix = {
+          config = {
             root = ./.;
-            filter = file: file.hasExt "nix";
+            filter =
+              file:
+              file.hasExt "json"
+              || file.hasExt "jsonc"
+              || file.hasExt "yaml"
+              || file.hasExt "toml"
+              || file.hasExt "md";
+            include = [ ./.oxfmtrc.json ];
             packages = with pkgs; [
-              nixfmt
+              oxfmt
             ];
             script = ''
-              nixfmt --check "$file"
+              oxfmt --check
             '';
           };
-
-          prettier = {
-            root = ./.;
-            filter = file: file.hasExt "yaml" || file.hasExt "json" || file.hasExt "md" || file.hasExt "mjs";
-            packages = with pkgs; [
-              prettier
-            ];
-            script = ''
-              prettier --check "$file"
-            '';
-          };
-        };
-
-        formatter = pkgs.treefmt.withConfig {
-          configFile = ./treefmt.toml;
-          runtimeInputs = with pkgs; [
-            nixfmt
-            tombi
-            prettier
-          ];
         };
       }
     );

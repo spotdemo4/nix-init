@@ -1,28 +1,70 @@
 {
-  "editor.formatOnSave": true,
   "files.associations": {
-    "renovate.json": "jsonc",
-    ".envrc.project": "dotenv",
-    ".envrc": "dotenv"
+    ".envrc*": "shellscript"
   },
 
-  // nix
+  "editor.semanticHighlighting.enabled": true,
+
+  "explorer.fileNesting.patterns": {
+    ".envrc.project": ".envrc",
+    "flake.nix": "flake.lock,treefmt.toml",
+    "README.md": "*.md,LICENSE"
+  },
+
+  "json.schemaDownload.trustedDomains": {
+    "https://raw.githubusercontent.com/": true,
+    "https://docs.renovatebot.com/": true,
+    "https://opencode.ai/": true,
+    "https://models.dev/": true
+  },
+
+  // esbenp.prettier-vscode
+  "prettier.enable": false,
+
+  // oxc.oxc-vscode
+  "oxc.enable.oxlint": true,
+  "oxc.enable.oxfmt": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "always" // oxlint
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+
+  // redhat.vscode-yaml
+  "yaml.format.enable": false,
+
+  // jnoortheen.nix-ide
   "nix.enableLanguageServer": true,
   "nix.serverPath": "nixd",
+  "nix.serverSettings": {
+    "nixd": {
+      "nixpkgs": {
+        "expr": "(builtins.getFlake (builtins.toString ./.)).outputs.nixpkgs.${builtins.currentSystem}"
+      },
+      "formatting": {
+        "command": ["nixfmt"]
+      }
+    }
+  },
   "[nix]": {
     "editor.defaultFormatter": "jnoortheen.nix-ide"
-  },
-
-  // toml
-  "[toml]": {
-    "editor.defaultFormatter": "tombi-toml.tombi"
-  },
-
-  // json
-  "json.schemaDownload.trustedDomains": {
-    "https://docs.renovatebot.com/": true
-  },
-
-  // default
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

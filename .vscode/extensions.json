@@ -1,7 +1,8 @@
 {
   "recommendations": [
+    "oxc.oxc-vscode",
     "jnoortheen.nix-ide",
-    "tombi-toml.tombi",
-    "esbenp.prettier-vscode"
+    "redhat.vscode-yaml",
+    "tombi-toml.tombi"
   ]
 }

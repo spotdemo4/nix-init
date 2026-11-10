@@ -106,3 +106,7 @@ the nix system platform (eg. `x86_64-linux`)
 ### `version`
 
 the nix version
+
+## Contributing
+
+see [CONTRIBUTING.md](CONTRIBUTING.md) for requirements and getting started

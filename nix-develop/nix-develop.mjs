@@ -11,10 +11,7 @@ const signalExitCodes = { SIGINT: 130, SIGTERM: 143 };
 const variableName = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 
 export class EnvironmentCollector {
-  constructor(
-    marker,
-    writeShellOutput = (chunk) => process.stdout.write(chunk),
-  ) {
+  constructor(marker, writeShellOutput = (chunk) => process.stdout.write(chunk)) {
     this.environment = new Map();
     this.environmentBytes = 0;
     this.fence = Buffer.from(`${marker}\0`);
@@ -28,10 +25,7 @@ export class EnvironmentCollector {
     if (!this.foundFence) {
       const fenceIndex = this.pending.indexOf(this.fence);
       if (fenceIndex === -1) {
-        const flushLength = Math.max(
-          0,
-          this.pending.length - this.fence.length + 1,
-        );
+        const flushLength = Math.max(0, this.pending.length - this.fence.length + 1);
         if (flushLength > 0) {
           this.writeShellOutput(this.pending.subarray(0, flushLength));
           this.pending = this.pending.subarray(flushLength);
@@ -81,9 +75,7 @@ export class EnvironmentCollector {
 
 export function extractEnvironment(output, marker) {
   const shellOutput = [];
-  const collector = new EnvironmentCollector(marker, (chunk) =>
-    shellOutput.push(chunk),
-  );
+  const collector = new EnvironmentCollector(marker, (chunk) => shellOutput.push(chunk));
   collector.push(output);
   return {
     environment: collector.finish(),
@@ -107,11 +99,7 @@ function multilineEntry(name, value, uuid = randomUUID) {
   return `${name}<<${marker}\n${value}\n${marker}\n`;
 }
 
-export function buildFileCommands(
-  environment,
-  hostEnvironment = process.env,
-  options = {},
-) {
+export function buildFileCommands(environment, hostEnvironment = process.env, options = {}) {
   const delimiter = options.pathDelimiter ?? pathDelimiter;
   const directoryExists = options.isDirectory ?? isDirectory;
   const uuid = options.uuid ?? randomUUID;
@@ -166,13 +154,7 @@ export function writeAll(fileDescriptor, value, writer = writeSync) {
   const buffer = Buffer.isBuffer(value) ? value : Buffer.from(value);
   let offset = 0;
   while (offset < buffer.length) {
-    const written = writer(
-      fileDescriptor,
-      buffer,
-      offset,
-      buffer.length - offset,
-      null,
-    );
+    const written = writer(fileDescriptor, buffer, offset, buffer.length - offset, null);
     if (written === 0) {
       throw new Error("unable to write environment");
     }
@@ -299,10 +281,7 @@ export async function main(arguments_ = process.argv.slice(2)) {
 
   const commands = buildFileCommands(result.environment);
   if (commands.environmentFile) {
-    appendFileSync(
-      process.env.GITHUB_ENV ?? "/dev/stderr",
-      commands.environmentFile,
-    );
+    appendFileSync(process.env.GITHUB_ENV ?? "/dev/stderr", commands.environmentFile);
   }
   if (commands.pathFile) {
     appendFileSync(process.env.GITHUB_PATH ?? "/dev/stderr", commands.pathFile);
