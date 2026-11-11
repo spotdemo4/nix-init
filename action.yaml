@@ -147,7 +147,7 @@ runs:
     # cache setup
 
     - if: ${{ inputs.niks3_url != '' }}
-      uses: Mic92/niks3-action@6c79855e3e7d8e62ca74234519438a858003abe1 # v1.7.0
+      uses: Mic92/niks3-action@347a156f2b7d8120fee9609272c0961ce555f7f9 # v1.8.0
       continue-on-error: true
       with:
         server-url: ${{ inputs.niks3_url }}
