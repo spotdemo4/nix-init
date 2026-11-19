@@ -75,7 +75,7 @@ runs:
     # checkout
 
     - id: checkout
-      uses: spotdemo4/better-checkout@ab7dfe8d48335ef0a98a0edeca2c4e95cd7fd547 # v0.16.0
+      uses: spotdemo4/better-checkout@d44e490a0dce276fb597c634b1cdb5ffc1b26dfc # v0.17.0
       with:
         token: ${{ inputs.token }}
         app-id: ${{ inputs.app_id }}
